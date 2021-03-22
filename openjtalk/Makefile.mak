@@ -1,6 +1,5 @@
 
 INSTALLDIR = C:\open_jtalk
-
 all:
 	cd text2mecab
 	nmake /f Makefile.mak
