@@ -31,14 +31,14 @@
                 {
                     "action_name": "openjtalk",
                     "inputs": ["./openjtalk/Makefile.mak"],
-                    "outputs": ["./openjtalk/bin/open_jtalk.exe"],
+                    "outputs": ["./openjtalk/static-lib/open_jtalk.lib"],
                     'action': ["cmd","/Q" "/C", "./tools/openjtalk.cmd"]
                 }]}],  # OS == "win"
                 ['OS != "win"', {"actions": [
                     {
                         "action_name": "make",
                         "inputs": ["./openjtalk"],
-                        "outputs": ["./openjtalk/lib/*.o", "./openjtalk/lib/*.a"],
+                        "outputs": ["./openjtalk/static-lib/libOpenJTalk.a"],
                         'action':["sh", "tools/openjtalk.sh"]
                     }
                 ]}]],  # OS != "win"

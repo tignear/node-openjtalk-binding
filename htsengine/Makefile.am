@@ -1,7 +1,7 @@
 
 EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS README Makefile.mak
 
-SUBDIRS = lib bin
+SUBDIRS = lib
 
 include_HEADERS = include/HTS_engine.h
 

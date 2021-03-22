@@ -6871,7 +6871,7 @@ else
 fi
 
 # Makefiles
-ac_config_files="$ac_config_files Makefile bin/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile"
+ac_config_files="$ac_config_files Makefile static-lib/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile"
 
 
 # Make mecab/config.h
@@ -7608,7 +7608,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "mecab/config.h") CONFIG_HEADERS="$CONFIG_HEADERS mecab/config.h:mecab/config.h.in" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "bin/Makefile") CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
+    "static-lib/Makefile") CONFIG_FILES="$CONFIG_FILES static-lib/Makefile" ;;
     "text2mecab/Makefile") CONFIG_FILES="$CONFIG_FILES text2mecab/Makefile" ;;
     "mecab/Makefile") CONFIG_FILES="$CONFIG_FILES mecab/Makefile" ;;
     "mecab/src/Makefile") CONFIG_FILES="$CONFIG_FILES mecab/src/Makefile" ;;

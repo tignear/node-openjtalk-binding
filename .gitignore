@@ -17,3 +17,4 @@ autom4te.cache
 config.h
 stamp-h1
 config.status
+/.vscode

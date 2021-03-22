@@ -37,7 +37,7 @@ all:
 	cd jpcommon
 	nmake /f Makefile.mak
 	cd ..
-	cd bin
+	cd static-lib
 	nmake /f Makefile.mak
 	cd ..
 	cd mecab-naist-jdic
@@ -81,7 +81,7 @@ clean:
 	cd jpcommon
 	nmake /f Makefile.mak clean
 	cd ..
-	cd bin
+	cd static-lib
 	nmake /f Makefile.mak clean
 	cd ..
 	cd mecab-naist-jdic

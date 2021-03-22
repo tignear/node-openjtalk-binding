@@ -5053,7 +5053,7 @@ ac_cv_lib_winmm=ac_cv_lib_winmm_main
 esac
 
 
-ac_config_files="$ac_config_files Makefile bin/Makefile lib/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -5800,7 +5800,6 @@ do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "bin/Makefile") CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

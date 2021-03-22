@@ -19,7 +19,7 @@ AM_CPPFLAGS = -I @top_srcdir@/text2mecab \
               -I @top_srcdir@/jpcommon \
               -I @HTS_ENGINE_HEADER_DIR@
 
-bin_PROGRAMS = open_jtalk
+lib_LIBRARIES = libOpenJTalk.a
 
 open_jtalk_LDADD = @top_srcdir@/text2mecab/libtext2mecab.a \
                    @top_srcdir@/mecab/src/libmecab.a \
@@ -35,4 +35,4 @@ open_jtalk_LDADD = @top_srcdir@/text2mecab/libtext2mecab.a \
                    @top_srcdir@/jpcommon/libjpcommon.a \
                    @HTS_ENGINE_LIBRARY@ -lstdc++
 
-open_jtalk_SOURCES = open_jtalk.c
+libOpenJTalk_a_SOURCES = open_jtalk.c

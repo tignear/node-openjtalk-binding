@@ -399,17 +399,11 @@ void HTS_GStreamSet_initialize(HTS_GStreamSet * gss);
 /* HTS_GStreamSet_create: generate speech */
 HTS_Boolean HTS_GStreamSet_create(HTS_GStreamSet * gss, HTS_PStreamSet * pss, size_t stage, HTS_Boolean use_log_gain, size_t sampling_rate, size_t fperiod, double alpha, double beta, HTS_Boolean * stop, double volume, HTS_Audio * audio);
 
-/* HTS_GStreamSet_get_total_nsamples: get total number of sample */
-size_t HTS_GStreamSet_get_total_nsamples(HTS_GStreamSet * gss);
-
 /* HTS_GStreamSet_get_total_frame: get total number of frame */
 size_t HTS_GStreamSet_get_total_frame(HTS_GStreamSet * gss);
 
 /* HTS_GStreamSet_get_static_length: get features length */
 size_t HTS_GStreamSet_get_vector_length(HTS_GStreamSet * gss, size_t stream_index);
-
-/* HTS_GStreamSet_get_speech: get synthesized speech parameter */
-double HTS_GStreamSet_get_speech(HTS_GStreamSet * gss, size_t sample_index);
 
 /* HTS_GStreamSet_get_parameter: get generated parameter */
 double HTS_GStreamSet_get_parameter(HTS_GStreamSet * gss, size_t stream_index, size_t frame_index, size_t vector_index);

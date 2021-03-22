@@ -462,6 +462,15 @@ void HTS_Engine_save_generated_speech(HTS_Engine * engine, FILE * fp);
 /* HTS_Engine_save_riff: save RIFF format file */
 void HTS_Engine_save_riff(HTS_Engine * engine, FILE * fp);
 
+/* HTS_Engine_save_riff: save RIFF format file */
+void HTS_Engine_save_pcm(HTS_Engine * engine, signed short ** pcm,size_t* length_of_pcm);
+
+/* HTS_GStreamSet_get_total_nsamples: get total number of sample */
+size_t HTS_GStreamSet_get_total_nsamples(HTS_GStreamSet * gss);
+
+/* HTS_GStreamSet_get_speech: get synthesized speech parameter */
+double HTS_GStreamSet_get_speech(HTS_GStreamSet * gss, size_t sample_index);
+
 /* HTS_Engine_refresh: free memory per one time synthesis */
 void HTS_Engine_refresh(HTS_Engine * engine);
 

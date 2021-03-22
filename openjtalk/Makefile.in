@@ -330,7 +330,7 @@ SUBDIRS = text2mecab \
           njd_set_long_vowel \
           njd2jpcommon \
           jpcommon \
-          bin \
+          static-lib \
           mecab-naist-jdic
 
 EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL Makefile.mak NEWS README
