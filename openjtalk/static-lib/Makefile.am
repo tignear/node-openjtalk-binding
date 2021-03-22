@@ -21,18 +21,4 @@ AM_CPPFLAGS = -I @top_srcdir@/text2mecab \
 
 lib_LIBRARIES = libOpenJTalk.a
 
-open_jtalk_LDADD = @top_srcdir@/text2mecab/libtext2mecab.a \
-                   @top_srcdir@/mecab/src/libmecab.a \
-                   @top_srcdir@/mecab2njd/libmecab2njd.a \
-                   @top_srcdir@/njd/libnjd.a \
-                   @top_srcdir@/njd_set_pronunciation/libnjd_set_pronunciation.a \
-                   @top_srcdir@/njd_set_digit/libnjd_set_digit.a \
-                   @top_srcdir@/njd_set_accent_phrase/libnjd_set_accent_phrase.a \
-                   @top_srcdir@/njd_set_accent_type/libnjd_set_accent_type.a \
-                   @top_srcdir@/njd_set_unvoiced_vowel/libnjd_set_unvoiced_vowel.a \
-                   @top_srcdir@/njd_set_long_vowel/libnjd_set_long_vowel.a \
-                   @top_srcdir@/njd2jpcommon/libnjd2jpcommon.a \
-                   @top_srcdir@/jpcommon/libjpcommon.a \
-                   @HTS_ENGINE_LIBRARY@ -lstdc++
-
 libOpenJTalk_a_SOURCES = open_jtalk.c
