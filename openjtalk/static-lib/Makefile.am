@@ -19,6 +19,6 @@ AM_CPPFLAGS = -I @top_srcdir@/text2mecab \
               -I @top_srcdir@/jpcommon \
               -I @HTS_ENGINE_HEADER_DIR@
 
-lib_LIBRARIES = libOpenJTalk.a
+noinst_LIBRARIES = libOpenJTalk.a
 
 libOpenJTalk_a_SOURCES = open_jtalk.c

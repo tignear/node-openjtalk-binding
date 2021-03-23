@@ -1,5 +1,14 @@
 #include "open_jtalk.h"
-
+/* Sub headers */
+#include "text2mecab.h"
+#include "mecab2njd.h"
+#include "njd_set_pronunciation.h"
+#include "njd_set_digit.h"
+#include "njd_set_accent_phrase.h"
+#include "njd_set_accent_type.h"
+#include "njd_set_unvoiced_vowel.h"
+#include "njd_set_long_vowel.h"
+#include "njd2jpcommon.h"
 #define MAXBUFLEN 1024
 
 void Open_JTalk_initialize(Open_JTalk *open_jtalk)
@@ -18,24 +27,24 @@ void Open_JTalk_clear(Open_JTalk *open_jtalk)
   HTS_Engine_clear(&open_jtalk->engine);
 }
 
-int Open_JTalk_load(Open_JTalk *open_jtalk, char *dn_mecab, char *fn_voice)
+int Open_JTalk_load(Open_JTalk *open_jtalk,const char *dn_mecab,const char *fn_voice)
 {
   if (Mecab_load(&open_jtalk->mecab, dn_mecab) != TRUE)
   {
     Open_JTalk_clear(open_jtalk);
-    return 0;
+    return 1;
   }
   if (HTS_Engine_load(&open_jtalk->engine, &fn_voice, 1) != TRUE)
   {
     Open_JTalk_clear(open_jtalk);
-    return 0;
+    return 2;
   }
   if (strcmp(HTS_Engine_get_fullcontext_label_format(&open_jtalk->engine), "HTS_TTS_JPN") != 0)
   {
     Open_JTalk_clear(open_jtalk);
-    return 0;
+    return 3;
   }
-  return 1;
+  return 0;
 }
 
 void Open_JTalk_set_sampling_frequency(Open_JTalk *open_jtalk, size_t i)

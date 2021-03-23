@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -9,21 +10,30 @@
 #include "njd.h"
 #include "jpcommon.h"
 #include "HTS_engine.h"
-
-/* Sub headers */
-#include "text2mecab.h"
-#include "mecab2njd.h"
-#include "njd_set_pronunciation.h"
-#include "njd_set_digit.h"
-#include "njd_set_accent_phrase.h"
-#include "njd_set_accent_type.h"
-#include "njd_set_unvoiced_vowel.h"
-#include "njd_set_long_vowel.h"
-#include "njd2jpcommon.h"
-
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 typedef struct _Open_JTalk {
    Mecab mecab;
    NJD njd;
    JPCommon jpcommon;
    HTS_Engine engine;
 } Open_JTalk;
+void Open_JTalk_initialize(Open_JTalk *open_jtalk);
+void Open_JTalk_clear(Open_JTalk *open_jtalk);
+int Open_JTalk_load(Open_JTalk *open_jtalk,const char *dn_mecab,const char *fn_voice);
+void Open_JTalk_set_sampling_frequency(Open_JTalk *open_jtalk, size_t i);
+void Open_JTalk_set_fperiod(Open_JTalk *open_jtalk, size_t i);
+void Open_JTalk_set_alpha(Open_JTalk *open_jtalk, double f);
+void Open_JTalk_set_beta(Open_JTalk *open_jtalk, double f);
+void Open_JTalk_set_speed(Open_JTalk *open_jtalk, double f);
+void Open_JTalk_add_half_tone(Open_JTalk *open_jtalk, double f);
+void Open_JTalk_set_msd_threshold(Open_JTalk *open_jtalk, size_t i, double f);
+void Open_JTalk_set_gv_weight(Open_JTalk *open_jtalk, size_t i, double f);
+void Open_JTalk_set_volume(Open_JTalk *open_jtalk, double f);
+void Open_JTalk_set_audio_buff_size(Open_JTalk *open_jtalk, size_t i);
+int Open_JTalk_synthesis(Open_JTalk *open_jtalk, const char *txt, signed short **pcm, size_t *length_of_pcm);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
