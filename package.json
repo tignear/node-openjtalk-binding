@@ -2,7 +2,7 @@
   "name": "node-openjtalk-binding",
   "version": "1.0.0",
   "main": "addon.js",
-  "license": "Unlicense",
+  "license": "(MIT OR Unlicense)",
   "description": "Simple binding of OpenJTalk",
   "repository": {
     "type": "git",
