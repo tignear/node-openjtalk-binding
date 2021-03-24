@@ -18,7 +18,7 @@
     "test": "node test/test.js",
     "docs": "jsdoc -c ./jsdoc.json"
   },
-  "homepage": "https://tignear.github.io/node-openjtalk-binding/",
+  "homepage": "https://tignear.github.io/node-openjtalk-binding/1.0.0",
   "gypfile": true,
   "devDependencies": {
     "clean-jsdoc-theme": "^3.0.9",
