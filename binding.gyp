@@ -69,7 +69,9 @@
                 },
             },
             'xcode_settings': {
-                'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
+                'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+                'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++'],
+                'OTHER_LDFLAGS': ['-stdlib=libc++'],
             },
             "conditions": [['OS == "win"', {"libraries": [
                 "<(module_root_dir)/openjtalk/static-lib/open_jtalk.lib",
