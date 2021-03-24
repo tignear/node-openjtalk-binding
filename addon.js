@@ -34,8 +34,9 @@ const path = require("path");
 
 /**
  * Synthesis voice with OpenJTalk
- * @param {!string} text Text to synthesize.
- * @param {!OpenJTalkOptions} options OpenJTalk synthesize option.
+ * @async
+ * @param {string} text Text to synthesize.
+ * @param {OpenJTalkOptions} options OpenJTalk synthesize option.
  * @return {Promise<WaveObject>} Synthesized PCM.
  */
 exports.synthesis = function synthesis(text, options) {
@@ -65,6 +66,7 @@ exports.synthesis = function synthesis(text, options) {
 }
 
 /** 
- * @type {string} dictionary_dir Path to builded dictionary.
+ * Path to builded dictionary.
+ * @type {string} 
  * */
 exports.dictionary_dir = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
