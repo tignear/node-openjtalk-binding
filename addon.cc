@@ -5,12 +5,13 @@
 #include <string>
 #include "options.cc"
 using Context = Napi::Reference<Napi::Value>;
-struct CShortArray
+struct Wave
 {
   size_t length;
   signed short *value;
+  size_t sampling_frequency;
 };
-using DataType = std::variant<CShortArray, const char *>;
+using DataType = std::variant<Wave, const char *>;
 void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *data);
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 using FinalizerDataType = void;
@@ -116,8 +117,8 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
       return;
     }
 
-    tsfn.BlockingCall(new DataType(CShortArray{
-        length_of_pcm, pcm}));
+    tsfn.BlockingCall(new DataType(Wave{
+        length_of_pcm, pcm, open_jtalk.engine.condition.sampling_frequency}));
     tsfn.Release();
   };
 
@@ -137,14 +138,14 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context,
     // does ensure a callback is provided.
     if (callback != nullptr)
     {
-      if (std::holds_alternative<CShortArray>(*data))
+      if (std::holds_alternative<Wave>(*data))
       {
-        auto sa = std::get<CShortArray>(*data);
+        auto wave = std::get<Wave>(*data);
         auto buffer = Napi::Buffer<signed short>::New(
-            env, sa.value, sa.length, [](Napi::Env, signed short *pcm) {
+            env, wave.value, wave.length, [](Napi::Env, signed short *pcm) {
               free(pcm);
             });
-        callback.Call(context->Value(), {env.Null(), buffer});
+        callback.Call(context->Value(), {env.Null(), buffer, Napi::Number::New(env, wave.sampling_frequency)});
       }
       else
       {

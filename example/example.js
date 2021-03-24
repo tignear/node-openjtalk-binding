@@ -4,20 +4,20 @@ const { promises: fs } = require("fs");
 synthesis("竹やぶ焼けた。", {
   htsvoice: path.resolve(__dirname, "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
   dictionary: dictionary_dir,
-}).then(buffer => new Int16Array(buffer.buffer)).then(audio=>{
-  const wav = Buffer.alloc(audio.byteLength+44);
-  createWAV(new DataView(wav.buffer),audio);
-  return fs.writeFile(path.resolve(__dirname,"example.wav"),wav);
+}).then(wave => {
+  const wav = Buffer.alloc(wave.data.byteLength + 44);
+  createWAV(new DataView(wav.buffer), wave);
+  return fs.writeFile(path.resolve(__dirname, "example.wav"), wav);
 });
 
 /**
  * 
  * @param {DataView} view 
- * @param {Int16Array} pcm
+ * @param {import("../addon").WaveObject} wave
  */
-function createWAV(view, pcm) {
+function createWAV(view, wave) {
   view.setUint32(0, 0x52494646);//"RIFF"
-  view.setUint32(4, pcm.byteLength + 44 - 8, true);
+  view.setUint32(4, wave.data.byteLength + 44 - 8, true);
   view.setUint32(8, 0x57415645);//"WAVE"
   view.setUint32(12, 0x666D7420);//"fmt "
   view.setUint32(16, 16, true);//16(LE)
@@ -28,9 +28,9 @@ function createWAV(view, pcm) {
   view.setUint16(32, 2, true);
   view.setUint16(34, 16, true);
   view.setUint32(36, 0x64617461);//"data"
-  view.setUint32(40, pcm.byteLength, true);
+  view.setUint32(40, wave.data.byteLength, true);
   let i = 44;
-  for (const x of pcm) {
+  for (const x of wave.data) {
     view.setInt16(i, x, true);
     i += 2;
   }

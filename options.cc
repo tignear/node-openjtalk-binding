@@ -71,7 +71,6 @@ constexpr auto option(
   return std::make_tuple(extract, set);
 }
 
-
 const static constexpr auto int_option_list = {
     option<int64_t>("sampling_frequency", &Options::sampling_frequency, range<int64_t>(1), &Open_JTalk_set_sampling_frequency),
     option<int64_t>("frame_period", &Options::frame_period, range<int64_t>(1), &Open_JTalk_set_fperiod),
@@ -94,7 +93,6 @@ const static constexpr auto double_option_list = {
     option("volume_in_dB", &Options::volume_in_dB, range<double>(), &Open_JTalk_set_volume),
 };
 
-
 template <size_t idx, class Dst, class Src>
 void OptionsLoop(Dst dst, Src src)
 {
@@ -107,7 +105,6 @@ void OptionsLoop(Dst dst, Src src)
     std::get<idx>(entry)(dst, src);
   }
 }
-
 
 void ExtractOptions(Options *options, Napi::Object &js_options)
 {
