@@ -3,7 +3,7 @@ name: github pages
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -11,19 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: true  # Fetch Hugo themes
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          hugo-version: '0.82.0'
-
-      - name: Build
-        run: hugo --minify
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+          fetch-depth: 0  
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - run: yarn
+      - run: yarn jsdoc
+      - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
