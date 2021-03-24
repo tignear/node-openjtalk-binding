@@ -9,7 +9,12 @@
     "node-gyp": "^7.1.2"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "node test/test.js",
+    "docs": "jsdoc -c ./jsdoc.json"
   },
-  "gypfile": true
+  "gypfile": true,
+  "devDependencies": {
+    "clean-jsdoc-theme": "^3.0.9",
+    "jsdoc": "^3.6.6"
+  }
 }

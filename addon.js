@@ -1,3 +1,8 @@
+/**
+ * Simple binding of OpenJTalk.
+ * @module node-openjtalk-binding
+ */
+
 const { synthesis: _synthesis } = require("bindings")("addon");
 const path = require("path");
 
@@ -20,20 +25,20 @@ const path = require("path");
 
 /**
  * @typedef {Object} WaveObject
- * @property {Buffer} raw_data
- * @property {Int16Array} data 
- * @property {16} bitDepth
- * @property {number} sampleRate 
- * @property {1} numChannels
+ * @property {!Buffer} raw_data  Synthesized PCM by host byte order. 
+ * @property {!Int16Array} data Synthesized PCM.
+ * @property {!16} bitDepth LINEAR16.
+ * @property {!number} sampleRate Equals to OpenJTalkOptions#sampling_frequency if presented for synthesis function. Else automatically determined value.
+ * @property {!1} numChannels monaural.
  */
 
 /**
  * Synthesis voice with OpenJTalk
- * @param {string} text Text to synthesize.
- * @param {OpenJTalkOptions} options OpenJTalk synthesize option.
- * @return {Promise<WaveObject>} Synthesized PCM by host byte order.
+ * @param {!string} text Text to synthesize.
+ * @param {!OpenJTalkOptions} options OpenJTalk synthesize option.
+ * @return {Promise<WaveObject>} Synthesized PCM.
  */
-function synthesis(text, options) {
+exports.synthesis = function synthesis(text, options) {
   return new Promise((resolve, reject) => {
     try {
       _synthesis((err, /**@type {Buffer}*/buffer, /** @type {number} */ sampleRate) => {
@@ -59,9 +64,7 @@ function synthesis(text, options) {
   });
 }
 
-/** @const {string} dictionary_dir Path to builded dictionary.*/
-const dictionary_dir = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
-
-/* exports */
-exports.synthesis = synthesis;
-exports.dictionary_dir = dictionary_dir;
+/** 
+ * @type {string} dictionary_dir Path to builded dictionary.
+ * */
+exports.dictionary_dir = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
