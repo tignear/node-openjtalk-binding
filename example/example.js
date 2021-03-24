@@ -2,7 +2,7 @@ const { synthesis, dictionary_dir } = require("../addon");
 const path = require("path");
 const { promises: fs } = require("fs");
 synthesis("竹やぶ焼けた。", {
-  htsvoice: path.resolve(__dirname, "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
+  htsvoice: path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
   dictionary: dictionary_dir,
 }).then(wave => {
   const wav = Buffer.alloc(wave.data.byteLength + 44);

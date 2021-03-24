@@ -8,5 +8,8 @@
     "node-addon-api": "^3.1.0",
     "node-gyp": "^7.1.2"
   },
+  "scripts": {
+    "test": "node test/test.js"
+  },
   "gypfile": true
 }

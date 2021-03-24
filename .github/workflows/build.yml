@@ -23,4 +23,6 @@ jobs:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
     - run: yarn
+    - run: yarn test
     - run: yarn run node-gyp rebuild
+    - run: yarn test
