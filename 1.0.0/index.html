@@ -26,7 +26,7 @@
     
 
 
-    <title>addon.js</title>
+    <title>Home</title>
 
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -58,7 +58,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li class="accordion collapsed" id=9044001><div class="accordion-title"><a href="module-node-openjtalk-binding.html">node-openjtalk-binding</a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li class="accordion collapsed" id=2947331><div class="accordion-title"><a href="module-node-openjtalk-binding.html">node-openjtalk-binding</a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
     <path 
         fill-rule="evenodd" 
         clip-rule="evenodd" 
@@ -69,90 +69,75 @@
 
 <div id="main">
     
-    <h1 id='page-title' class="page-title">addon.js</h1>
-    
 
     
 
 
 
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Simple binding of OpenJTalk.
- * @module node-openjtalk-binding
- */
 
-const { synthesis: _synthesis } = require("bindings")("addon");
-const path = require("path");
 
-/**
- * @typedef {Object} OpenJTalkOptions
- * @property {!string} dictionary Path to dictionary. NOT be URL nor Buffer.
- * @property {!string} htsvoice Path to htsvoice. NOT be URL nor Buffer.
- * @property {?number} sampling_frequency Must be int. 1&lt;=sampling_frequency.
- * @property {?number} frame_period Must be int. 1&lt;=frame_period.
- * @property {?number} all_pass_constant 0.0&lt;=all_pass_constant&lt;=1.0.
- * @property {?number} postfiltering_coefficient Default is 0.0. 0.0&lt;=postfiltering_coefficient&lt;=1.0.
- * @property {?number} speech_speed_rate Default is 1.0. 0&lt;=speech_speed_rate. Warning: Do not set a very small value as it consumes CPU time.
- * @property {?number} additional_half_tone Default is 0.0.
- * @property {?number} voiced_unvoiced_threshold Default is 0.5. 0.0&lt;=voiced_unvoiced_threshold&lt;=1.0.
- * @property {?number} weight_of_GV_for_spectrum Default is 1.0. 0.0&lt;=weight_of_GV_for_spectrum.
- * @property {?number} weight_of_GV_for_log_F0 Default is 1.0. 0.0&lt;=weight_of_GV_for_log_F0.
- * @property {?number} volume_in_dB Default is 0.0.
- * @property {?number} audio_buffer_size Disabled as default. 0 regarded disabled. 0&lt;=audio_buffer_size
- */
 
-/**
- * @typedef {Object} WaveObject
- * @property {!Buffer} raw_data  Synthesized PCM by host byte order. 
- * @property {!Int16Array} data Synthesized PCM.
- * @property {!16} bitDepth LINEAR16.
- * @property {!number} sampleRate Equals to OpenJTalkOptions#sampling_frequency if presented for synthesis function. Else automatically determined value.
- * @property {!1} numChannels monaural.
- */
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>node-openjtalk-binding</h1>
+<p>Simple binding of OpenJTalk.</p>
+<h2>Requirements</h2>
+<ul>
+<li><a href="https://github.com/nodejs/node-gyp#installation">node-gyp</a></li>
+<li>automake</li>
+<li>c++17 support</li>
+</ul>
+<h2>Example</h2>
+<pre class="prettyprint source lang-js"><code>const { synthesis, dictionary_dir } = require(&quot;node-openjtalk-binding&quot;);
+const path = require(&quot;path&quot;);
+const { promises: fs } = require(&quot;fs&quot;);
+synthesis(&quot;竹やぶ焼けた。&quot;, {
+  htsvoice: path.resolve(__dirname, &quot;hts_voice_nitech_jp_atr503_m001-1.05&quot;, &quot;nitech_jp_atr503_m001.htsvoice&quot;),
+  dictionary: dictionary_dir,
+}).then(wave => {
+  const wav = Buffer.alloc(wave.data.byteLength + 44);
+  createWAV(new DataView(wav.buffer), wave);
+  return fs.writeFile(path.resolve(__dirname, &quot;example.wav&quot;), wav);
+});
 
 /**
- * Synthesis voice with OpenJTalk
- * @async
- * @param {string} text Text to synthesize.
- * @param {OpenJTalkOptions} options OpenJTalk synthesize option.
- * @return {Promise&lt;WaveObject>} Synthesized PCM.
+ * 
+ * @param {DataView} view 
+ * @param {import(&quot;../addon&quot;).WaveObject} wave
  */
-exports.synthesis = function synthesis(text, options) {
-  return new Promise((resolve, reject) => {
-    try {
-      _synthesis((err, /**@type {Buffer}*/buffer, /** @type {number} */ sampleRate) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        /**
-         * @type {WaveObject}
-         */
-        const wave = {
-          raw_data: buffer,
-          data: new Int16Array(buffer.buffer),
-          bitDepth: 16,
-          numChannels: 1,
-          sampleRate
-        };
-        resolve(wave);
-      }, text, options);
-    } catch (err) {
-      reject(err);
-    }
-  });
+function createWAV(view, wave) {
+  view.setUint32(0, 0x52494646);//&quot;RIFF&quot;
+  view.setUint32(4, wave.data.byteLength + 44 - 8, true);
+  view.setUint32(8, 0x57415645);//&quot;WAVE&quot;
+  view.setUint32(12, 0x666D7420);//&quot;fmt &quot;
+  view.setUint32(16, 16, true);//16(LE)
+  view.setUint16(20, 1, true);//LINEAR PCM
+  view.setUint16(22, 1, true);//monaural
+  view.setUint32(24, 48000, true);//48kHz
+  view.setUint32(28, 48000, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  view.setUint32(36, 0x64617461);//&quot;data&quot;
+  view.setUint32(40, wave.data.byteLength, true);
+  let i = 44;
+  for (const x of wave.data) {
+    view.setInt16(i, x, true);
+    i += 2;
+  }
 }
-
-/** 
- * Path to builded dictionary.
- * @type {string} 
- * */
-exports.dictionary_dir = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");</code></pre>
-        </article>
+</code></pre></article>
     </section>
+
+
 
 
 
