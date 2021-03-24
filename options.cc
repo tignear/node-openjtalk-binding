@@ -2,6 +2,7 @@
 #include <open_jtalk.h>
 #include <limits>
 #include <optional>
+
 struct Options
 {
   std::optional<size_t> sampling_frequency;
@@ -16,6 +17,7 @@ struct Options
   std::optional<double> weight_of_GV_for_log_F0;
   std::optional<double> volume_in_dB;
 };
+
 using namespace std::literals::string_literals;
 void CheckNullish(Napi::Value &value, const std::string &key)
 {
@@ -24,6 +26,7 @@ void CheckNullish(Napi::Value &value, const std::string &key)
     throw Napi::TypeError::New(value.Env(), "Invalid "s + key + " type."s);
   }
 }
+
 template <class T>
 constexpr auto range(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
 {
@@ -31,6 +34,7 @@ constexpr auto range(T min = std::numeric_limits<T>::min(), T max = std::numeric
     return min <= value && value <= max;
   };
 }
+
 template <class T = Napi::Number, class U = T, class F>
 constexpr auto option(
     const char *key,
@@ -66,6 +70,8 @@ constexpr auto option(
   };
   return std::make_tuple(extract, set);
 }
+
+
 const static constexpr auto int_option_list = {
     option<int64_t>("sampling_frequency", &Options::sampling_frequency, range<int64_t>(1), &Open_JTalk_set_sampling_frequency),
     option<int64_t>("frame_period", &Options::frame_period, range<int64_t>(1), &Open_JTalk_set_fperiod),
@@ -87,6 +93,8 @@ const static constexpr auto double_option_list = {
     }),
     option("volume_in_dB", &Options::volume_in_dB, range<double>(), &Open_JTalk_set_volume),
 };
+
+
 template <size_t idx, class Dst, class Src>
 void OptionsLoop(Dst dst, Src src)
 {
@@ -99,6 +107,8 @@ void OptionsLoop(Dst dst, Src src)
     std::get<idx>(entry)(dst, src);
   }
 }
+
+
 void ExtractOptions(Options *options, Napi::Object &js_options)
 {
   OptionsLoop<0>(options, js_options);

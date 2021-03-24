@@ -1,5 +1,5 @@
-const {synthesis: _synthesis} = require("bindings")("addon");
-
+const { synthesis: _synthesis } = require("bindings")("addon");
+const path = require("path");
 
 /**
  * @typedef {Object} OpenJTalkOptions
@@ -23,21 +23,27 @@ const {synthesis: _synthesis} = require("bindings")("addon");
  * Synthesis voice with OpenJTalk
  * @param {string} text Text to synthesize.
  * @param {OpenJTalkOptions} options OpenJTalk synthesize option.
+ * @return {Promise<Buffer>} Synthesized PCM by host byte order.
  */
-function synthesis(text,options){
-  return new Promise((resolve,reject)=>{
-    try{
-      _synthesis((err,buffer)=>{
-        if(err){
+function synthesis(text, options) {
+  return new Promise((resolve, reject) => {
+    try {
+      _synthesis((err, buffer) => {
+        if (err) {
           reject(err);
           return;
         }
         resolve(buffer);
-      },text,options);
-    }catch(err){
+      }, text, options);
+    } catch (err) {
       reject(err);
     }
   });
 }
 
+/** @const {string} dictionary_dir Path to builded dictionary.*/
+const dictionary_dir = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+
+/* exports */
 exports.synthesis = synthesis;
+exports.dictionary_dir = dictionary_dir;

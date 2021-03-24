@@ -5,5 +5,5 @@ rm -f Makefile
 aclocal
 automake -a -c
 autoconf
-./configure --with-hts-engine-header-path=${hts_engine_dir}/include --with-hts-engine-library-path=${hts_engine_dir}/lib --with-charset=UTF-8
+./configure --with-hts-engine-header-path=${hts_engine_dir}/include --with-hts-engine-library-path=${hts_engine_dir}/lib --with-charset=UTF-8 
 make

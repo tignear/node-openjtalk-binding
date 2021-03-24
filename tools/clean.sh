@@ -1,0 +1,2 @@
+find "./htsengine" -name "*.lib" -o -name "*.o" -o -name "*.a" -o -name "*.obj" -type f | xargs rm
+find "./openjtalk" -name "*.lib" -o -name "*.o" -o -name "*.a" -o -name "*.obj" -o -name "*.dic" -type f | xargs rm

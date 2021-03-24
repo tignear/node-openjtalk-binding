@@ -15,7 +15,7 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 using FinalizerDataType = void;
 
-Napi::Value Synthesis(const Napi::CallbackInfo &info)
+void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, std::string &fn_voice, Options *options)
 {
   Napi::Env env = info.Env();
   if (info.Length() < 3)
@@ -34,6 +34,41 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
   {
     throw Napi::TypeError::New(env, "Expected options to be object.");
   }
+  auto js_options = info[2].As<Napi::Object>();
+
+  if (!js_options.Has("dictionary"))
+  {
+    throw Napi::TypeError::New(env, "Expected options to have dictionary.");
+  }
+  auto dictionary_js_value = js_options.Get("dictionary");
+  if (!dictionary_js_value.IsString())
+  {
+    throw Napi::TypeError::New(env, "Expected dictionary to be string.");
+  }
+  if (!js_options.Has("htsvoice"))
+  {
+    throw Napi::TypeError::New(env, "Expected options to have htsvoice.");
+  }
+  auto htsvoice_js_value = js_options.Get("htsvoice");
+  if (!htsvoice_js_value.IsString())
+  {
+    throw Napi::TypeError::New(env, "Expected htsvoice to be string.");
+  }
+
+  text = info[1].As<Napi::String>().Utf8Value();
+  dn_dict = dictionary_js_value.As<Napi::String>();
+  fn_voice = htsvoice_js_value.As<Napi::String>();
+  ExtractOptions(options, js_options);
+}
+Napi::Value Synthesis(const Napi::CallbackInfo &info)
+{
+  Napi::Env env = info.Env();
+
+  std::string text;
+  std::string dn_dict;
+  std::string fn_voice;
+  Options options;
+  LoadArguments(info, text, dn_dict, fn_voice, &options);
   Context *context = new Napi::Reference<Napi::Value>(Napi::Persistent(info.This()));
   TSFN tsfn = TSFN::New(
       env,
@@ -47,32 +82,6 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
         delete ctx;
       });
 
-  std::string text = info[1].As<Napi::String>();
-  auto js_options = info[2].As<Napi::Object>();
-
-  if (!js_options.Has("dictionary"))
-  {
-    throw Napi::TypeError::New(env, "Expected options to have dictionary.");
-  }
-  auto dictionary_js_value = js_options.Get("dictionary");
-  if (!dictionary_js_value.IsString())
-  {
-    throw Napi::TypeError::New(env, "Expected dictionary to be string.");
-  }
-  std::string dn_dict = dictionary_js_value.As<Napi::String>();
-  if (!js_options.Has("htsvoice"))
-  {
-    throw Napi::TypeError::New(env, "Expected options to have htsvoice.");
-  }
-  auto htsvoice_js_value = js_options.Get("htsvoice");
-  if (!htsvoice_js_value.IsString())
-  {
-    throw Napi::TypeError::New(env, "Expected htsvoice to be string.");
-  }
-  std::string fn_voice = htsvoice_js_value.As<Napi::String>();
-
-  Options options;
-  ExtractOptions(&options, js_options);
   auto lambda = [tsfn, dn_dict, fn_voice, text, options]() mutable {
     Open_JTalk open_jtalk;
 

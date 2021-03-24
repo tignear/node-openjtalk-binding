@@ -175,7 +175,6 @@ BOOL Mecab_print(Mecab *m)
    int i;
 
    for(i = 0; i < m->size; i++)
-      printf("%s\n", m->feature[i]);
    return TRUE;
 }
 

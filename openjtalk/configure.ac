@@ -252,41 +252,17 @@ case "$host_os" in
       ;;
 esac
 
-# Define charset
-AC_ARG_WITH(charset,
-            [  --with-charset          specify charset (EUC-JP/SHIFT_JIS/UTF-8)],
-            [charset=$withval],
-            [charset='UTF-8'])
-AC_MSG_CHECKING(charset)
-AC_MSG_RESULT($charset)
 AC_SUBST(MECAB_CHARSET)
 AC_SUBST(MECAB_DEFAULT_CHARSET)
 AC_SUBST(MECAB_USE_UTF8_ONLY)
 AC_SUBST(CHARSET)
-if test x$charset = xeucjp -o x$charset = xeuc-jp -o x$charset = xeuc_jp -o x$charset = xEUCJP -o x$charset = xEUC-JP -o x$charset = xEUC_JP ; then
-   MECAB_CHARSET=EUC-JP
-   MECAB_DEFAULT_CHARSET="EUC-JP"
-   MECAB_USE_UTF8_ONLY=""
-   CHARSET="-D CHARSET_EUC_JP"
-   CFLAGS="$CFLAGS -finput-charset=EUC-JP -fexec-charset=EUC-JP "
-   CXXFLAGS="$CXXFLAGS -finput-charset=EUC-JP -fexec-charset=EUC-JP "
-elif test x$charset = xsjis -o x$charset = xshift-jis -o x$charset = xshift_jis -o x$charset = xSJIS -o x$charset = xSHIFT-JIS -o x$charset = xSHIFT_JIS ; then
-   MECAB_CHARSET=SHIFT-JIS
-   MECAB_DEFAULT_CHARSET="SHIFT-JIS"
-   MECAB_USE_UTF8_ONLY=""
-   CHARSET="-D CHARSET_SHIFT_JIS"
-   CFLAGS="$CFLAGS -finput-charset=cp932 -fexec-charset=cp932 "
-   CXXFLAGS="$CXXFLAGS -finput-charset=cp932 -fexec-charset=cp932 "
-elif test x$charset = xutf8 -o x$charset = xutf-8 -o x$charset = xutf_8 -o x$charset = xUTF8 -o x$charset = xUTF-8 -o x$charset = xUTF_8 ; then
-   MECAB_CHARSET=UTF-8
-   MECAB_DEFAULT_CHARSET="UTF-8"
-   MECAB_USE_UTF8_ONLY="-D MECAB_USE_UTF8_ONLY"
-   CHARSET="-D CHARSET_UTF_8"
-   CFLAGS="$CFLAGS -finput-charset=UTF-8 -fexec-charset=UTF-8 "
-   CXXFLAGS="$CXXFLAGS -finput-charset=UTF-8 -fexec-charset=UTF-8 "
-else
-   AC_MSG_ERROR(Cannot recognize $charset)
-fi
+MECAB_CHARSET=UTF-8
+MECAB_DEFAULT_CHARSET="UTF-8"
+MECAB_USE_UTF8_ONLY="-D MECAB_USE_UTF8_ONLY"
+CHARSET="-D CHARSET_UTF_8"
+CFLAGS="$CFLAGS -finput-charset=UTF-8 -fexec-charset=UTF-8 "
+CXXFLAGS="$CXXFLAGS -finput-charset=UTF-8 -fexec-charset=UTF-8 "
+
 
 # Makefiles
 AC_CONFIG_FILES([Makefile static-lib/Makefile text2mecab/Makefile mecab/Makefile mecab/src/Makefile mecab2njd/Makefile njd/Makefile njd_set_pronunciation/Makefile njd_set_digit/Makefile njd_set_accent_phrase/Makefile njd_set_accent_type/Makefile njd_set_unvoiced_vowel/Makefile njd_set_long_vowel/Makefile njd2jpcommon/Makefile jpcommon/Makefile mecab-naist-jdic/Makefile])

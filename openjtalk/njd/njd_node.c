@@ -428,7 +428,6 @@ void NJDNode_load(NJDNode * node, const char *str)
    int index_pron;
    int index_acc;
    NJDNode *prev = NULL;
-
    /* load */
    get_token_from_string(str, &index, buff_string, ',');
    get_token_from_string(str, &index, buff, ',');

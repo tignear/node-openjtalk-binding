@@ -57,28 +57,10 @@ NJD_SET_DIGIT_C_START;
 
 #include "njd.h"
 #include "njd_set_digit.h"
+#define CHARSET_UTF_8 1
 
-#ifdef ASCII_HEADER
-#if defined(CHARSET_EUC_JP)
-#include "njd_set_digit_rule_ascii_for_euc_jp.h"
-#elif defined(CHARSET_SHIFT_JIS)
-#include "njd_set_digit_rule_ascii_for_shift_jis.h"
-#elif defined(CHARSET_UTF_8)
-#include "njd_set_digit_rule_ascii_for_utf_8.h"
-#else
-#error CHARSET is not specified
-#endif
-#else
-#if defined(CHARSET_EUC_JP)
-#include "njd_set_digit_rule_euc_jp.h"
-#elif defined(CHARSET_SHIFT_JIS)
-#include "njd_set_digit_rule_shift_jis.h"
-#elif defined(CHARSET_UTF_8)
 #include "njd_set_digit_rule_utf_8.h"
-#else
-#error CHARSET is not specified
-#endif
-#endif
+
 
 #define MAXBUFLEN 1024
 
