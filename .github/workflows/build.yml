@@ -22,6 +22,8 @@ jobs:
     steps: 
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
+    - if: ${{ matrix.os == 'macos-latest' }}
+    - run: brew install automake
     - run: yarn
     - run: yarn test
     - run: yarn run node-gyp rebuild
