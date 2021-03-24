@@ -72,6 +72,7 @@
                 'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
                 'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++'],
                 'OTHER_LDFLAGS': ['-stdlib=libc++'],
+                'MACOSX_DEPLOYMENT_TARGET': '10.7',
             },
             "conditions": [['OS == "win"', {"libraries": [
                 "<(module_root_dir)/openjtalk/static-lib/open_jtalk.lib",
