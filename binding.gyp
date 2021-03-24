@@ -65,25 +65,28 @@
             ],
             'msvs_settings': {
                 'VCCLCompilerTool': {
-                    'AdditionalOptions': ['-std:c++17',"/utf-8","/D NOMINMAX","/EHsc"],
+                    'AdditionalOptions': ['-std:c++17', "/utf-8", "/D NOMINMAX", "/EHsc"],
                 },
             },
+            'xcode_settings': {
+                'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
+            },
             "conditions": [['OS == "win"', {"libraries": [
-                    "<(module_root_dir)/openjtalk/static-lib/open_jtalk.lib",
-                    "<(module_root_dir)/openjtalk/mecab/src/mecab.lib",
-                    "<(module_root_dir)/openjtalk/njd/njd.lib",
-                    "<(module_root_dir)/openjtalk/jpcommon/jpcommon.lib",
-                    "<(module_root_dir)/htsengine/lib/hts_engine_API.lib",
-                    "<(module_root_dir)/openjtalk/text2mecab/text2mecab.lib",
-                    "<(module_root_dir)/openjtalk/mecab2njd/mecab2njd.lib",
-                    "<(module_root_dir)/openjtalk/njd_set_pronunciation/njd_set_pronunciation.lib",
-                    "<(module_root_dir)/openjtalk/njd_set_digit/njd_set_digit.lib",
-                    "<(module_root_dir)/openjtalk/njd_set_accent_phrase/njd_set_accent_phrase.lib",
-                    "<(module_root_dir)/openjtalk/njd_set_accent_type/njd_set_accent_type.lib",
-                    "<(module_root_dir)/openjtalk/njd_set_unvoiced_vowel/njd_set_unvoiced_vowel.lib",
-                    "<(module_root_dir)/openjtalk/njd_set_long_vowel/njd_set_long_vowel.lib",
-                    "<(module_root_dir)/openjtalk/njd2jpcommon/njd2jpcommon.lib"
-                ]}],  # OS == "win"
+                "<(module_root_dir)/openjtalk/static-lib/open_jtalk.lib",
+                "<(module_root_dir)/openjtalk/mecab/src/mecab.lib",
+                "<(module_root_dir)/openjtalk/njd/njd.lib",
+                "<(module_root_dir)/openjtalk/jpcommon/jpcommon.lib",
+                "<(module_root_dir)/htsengine/lib/hts_engine_API.lib",
+                "<(module_root_dir)/openjtalk/text2mecab/text2mecab.lib",
+                "<(module_root_dir)/openjtalk/mecab2njd/mecab2njd.lib",
+                "<(module_root_dir)/openjtalk/njd_set_pronunciation/njd_set_pronunciation.lib",
+                "<(module_root_dir)/openjtalk/njd_set_digit/njd_set_digit.lib",
+                "<(module_root_dir)/openjtalk/njd_set_accent_phrase/njd_set_accent_phrase.lib",
+                "<(module_root_dir)/openjtalk/njd_set_accent_type/njd_set_accent_type.lib",
+                "<(module_root_dir)/openjtalk/njd_set_unvoiced_vowel/njd_set_unvoiced_vowel.lib",
+                "<(module_root_dir)/openjtalk/njd_set_long_vowel/njd_set_long_vowel.lib",
+                "<(module_root_dir)/openjtalk/njd2jpcommon/njd2jpcommon.lib"
+            ]}],  # OS == "win"
                 ['OS != "win"', {"libraries": [
                     "<(module_root_dir)/openjtalk/static-lib/libOpenJTalk.a",
                     "<(module_root_dir)/openjtalk/mecab/src/libmecab.a",
