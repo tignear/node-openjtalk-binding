@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs: 
   build: 
     runs-on: ${{ matrix.os }}
-    sterategy: 
+    strategy: 
       matrix: [windows-latest,macos-latest,ubuntu-latest]
     steps: 
     - uses: actions/checkout@v1
