@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - master
-
+  tags: 
+      - 'v*'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,8 +17,12 @@ jobs:
       - uses: actions/setup-node@v1
       - run: yarn
       - run: yarn docs
+      - run: |
+        PACKAGE_VERSION=$(cat package.json|jq -r '.version')
+        echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_ENV
+        echo "DESTINATION=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/node-openjtalk-binding
-          keep_files: true
+          publish_dir: ./docs/node-openjtalk-binding/${{ env.PACKAGE_VERSION }}
+          destination_dir: ${{ env.DESTINATION }}
