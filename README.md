@@ -6,6 +6,14 @@ Simple binding of OpenJTalk.
 - automake
 - c++17 support
 
+## Install 
+```sh
+#npm
+npm install node-openjtalk-binding
+#yarn
+yarn add node-openjtalk-binding
+```
+
 ## Example
 
 ```js
