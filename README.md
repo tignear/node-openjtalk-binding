@@ -32,7 +32,7 @@ synthesis("竹やぶ焼けた。", {
 /**
  * 
  * @param {DataView} view 
- * @param {import("../addon").WaveObject} wave
+ * @param {import("node-openjtalk-binding").WaveObject} wave
  */
 function createWAV(view, wave) {
   view.setUint32(0, 0x52494646);//"RIFF"
