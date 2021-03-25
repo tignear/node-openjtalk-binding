@@ -1,4 +1,4 @@
-# node-openjtalk-binding
+# node-openjtalk-binding [![npm version](https://badge.fury.io/js/node-openjtalk-binding.svg)](https://badge.fury.io/js/node-openjtalk-binding)
 Simple binding of OpenJTalk.
 
 ## Requirements
