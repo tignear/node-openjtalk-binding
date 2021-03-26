@@ -78,7 +78,7 @@ const static constexpr auto int_option_list = {
 };
 const static constexpr auto double_option_list = {
     option("all_pass_constant", &Options::all_pass_constant, range(0.0, 1.0), &Open_JTalk_set_alpha),
-    option("postfiltering_coefficient", &Options::postfiltering_coefficient, range(0.0), &Open_JTalk_set_speed),
+    option("postfiltering_coefficient", &Options::postfiltering_coefficient, range(0.0,1.0), &Open_JTalk_set_beta),
     option("speech_speed_rate", &Options::speech_speed_rate, range(0.0), &Open_JTalk_set_speed),
     option("additional_half_tone", &Options::additional_half_tone, range<double>(), &Open_JTalk_add_half_tone),
     option<Napi::Number, double>("voiced_unvoiced_threshold", &Options::voiced_unvoiced_threshold, range(0.0, 1.0), [](Open_JTalk *open_jtalk, double value) {
