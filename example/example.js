@@ -16,17 +16,18 @@ synthesis("竹やぶ焼けた。", {
  * @param {import("../addon").WaveObject} wave
  */
 function createWAV(view, wave) {
+  const blockSize = wave.numChannels * wave.bitDepth / 8;
   view.setUint32(0, 0x52494646);//"RIFF"
   view.setUint32(4, wave.data.byteLength + 44 - 8, true);
   view.setUint32(8, 0x57415645);//"WAVE"
   view.setUint32(12, 0x666D7420);//"fmt "
   view.setUint32(16, 16, true);//16(LE)
   view.setUint16(20, 1, true);//LINEAR PCM
-  view.setUint16(22, 1, true);//monaural
-  view.setUint32(24, 48000, true);//48kHz
-  view.setUint32(28, 48000, true);
-  view.setUint16(32, 2, true);
-  view.setUint16(34, 16, true);
+  view.setUint16(22, wave.numChannels, true);
+  view.setUint32(24, wave.sampleRate, true);
+  view.setUint32(28, wave.sampleRate * blockSize, true);
+  view.setUint16(32, blockSize, true);
+  view.setUint16(34, wave.bitDepth, true);
   view.setUint32(36, 0x64617461);//"data"
   view.setUint32(40, wave.data.byteLength, true);
   let i = 44;
