@@ -2,9 +2,11 @@
 Simple binding of OpenJTalk.
 
 ## Requirements
-- [node-gyp](https://github.com/nodejs/node-gyp#installation)
-- automake
-- c++17 support
+- Able to run [node-gyp](https://github.com/nodejs/node-gyp#installation)
+- Able to run automake.
+  - If you use Linux or Mac OS.
+- c++ 17 can be compiled. 
+- If you use Mac OS, 10.14 or later is required because std::get cannot use before 10.14.
 
 ## Install 
 ```sh
