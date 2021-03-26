@@ -1,6 +1,6 @@
 {
   "name": "node-openjtalk-binding",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.4",
   "main": "addon.js",
   "types": "addon.d.ts",
   "license": "(MIT OR Unlicense)",
@@ -20,7 +20,7 @@
     "docs": "jsdoc -c ./jsdoc.json",
     "type": "tsc"
   },
-  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.0.0-rc.3",
+  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.0.0-rc.4",
   "gypfile": true,
   "devDependencies": {
     "clean-jsdoc-theme": "^3.0.9",
