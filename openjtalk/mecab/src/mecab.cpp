@@ -101,14 +101,12 @@ BOOL Mecab_load(Mecab *m, const char *dicdir)
    free(argv);
 
    if(model == NULL) {
-      fprintf(stderr, "ERROR: Mecab_load() in mecab.cpp: Cannot open %s.\n", dicdir);
       return FALSE;
    }
 
    MeCab::Tagger *tagger = model->createTagger();
    if(tagger == NULL) {
       delete model;
-      fprintf(stderr, "ERROR: Mecab_load() in mecab.cpp: Cannot open %s.\n", dicdir);
       return FALSE;
    }
 
@@ -116,7 +114,6 @@ BOOL Mecab_load(Mecab *m, const char *dicdir)
    if(lattice == NULL) {
       delete model;
       delete tagger;
-      fprintf(stderr, "ERROR: Mecab_load() in mecab.cpp: Cannot open %s.\n", dicdir);
       return FALSE;
    }
 

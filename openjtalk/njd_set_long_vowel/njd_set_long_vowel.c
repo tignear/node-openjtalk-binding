@@ -96,64 +96,11 @@ static int strtopcmp(const char *str, const char *pattern)
    }
 }
 
-static int detect_byte(const char *str)
-{
-   int i, byte;
 
-   byte = -1;
-   for (i = 0; njd_set_long_vowel_kanji_range[i] > 0; i += 3) {
-      if (njd_set_long_vowel_kanji_range[i + 1] <= str[0]
-          && njd_set_long_vowel_kanji_range[i + 2] >= str[0]) {
-         byte = njd_set_long_vowel_kanji_range[i];
-         break;
-      }
-   }
-   if (byte < 0) {
-      fprintf(stderr, "ERROR: detect_byte() in njd_set_long_vowel.c: Wrong character.\n");
-      exit(1);
-   }
-   return byte;
-}
 
 void njd_set_long_vowel(NJD * njd)
 {
-#if 1
-   /* long vowel estimator is deprecated */
    return;
-#else
-   int i, j;
-   NJDNode *node;
-   const char *str;
-   int len;
-   char buff[MAXBUFLEN];
-   int byte = -1;
-
-   for (node = njd->head; node != NULL; node = node->next) {
-      /* initialize */
-      str = NJDNode_get_pron(node);
-      len = strlen(str);
-      buff[0] = '\0';
-      /* search */
-      for (i = 0; i < len; i += byte) {
-         byte = -1;
-         for (j = 0; njd_set_long_vowel_table[j] != NULL; j += 2) {
-            byte = strtopcmp(&str[i], njd_set_long_vowel_table[j]);
-            if (byte > 0) {
-               /* find */
-               strcat(buff, njd_set_long_vowel_table[j + 1]);
-               break;
-            }
-         }
-         /* not found */
-         if (byte < 0) {
-            byte = detect_byte(&str[i]);
-            strncat(buff, &str[i], byte);
-         }
-      }
-      /* finish */
-      NJDNode_set_pron(node, buff);
-   }
-#endif
 }
 
 NJD_SET_LONG_VOWEL_C_END;

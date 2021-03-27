@@ -595,8 +595,6 @@ void HTS_error(int error, const char *message, ...)
 
    if (error > 0)
       fprintf(stderr, "\nError: ");
-   else
-      fprintf(stderr, "\nWarning: ");
 
    va_start(arg, message);
    vfprintf(stderr, message, arg);

@@ -202,7 +202,6 @@ void NJDNode_set_acc(NJDNode * node, int acc)
 {
    node->acc = acc;
    if (node->acc < 0) {
-      fprintf(stderr, "WARNING: NJDNode_set_acc() in njd_node.c: Accent must be positive value.\n");
       node->acc = 0;
    }
 }
@@ -211,8 +210,6 @@ void NJDNode_set_mora_size(NJDNode * node, int size)
 {
    node->mora_size = size;
    if (node->mora_size < 0) {
-      fprintf(stderr,
-              "WARNING: NJDNode_set_mora_size() in njd_node.c: Mora size must be positive value.\n");
       node->mora_size = 0;
    }
 }
@@ -304,7 +301,6 @@ void NJDNode_add_acc(NJDNode * node, int acc)
 {
    node->acc += acc;
    if (node->acc < 0) {
-      fprintf(stderr, "WARNING: NJDNode_add_acc() in njd_node.c: Accent must be positive value.\n");
       node->acc = 0;
    }
 }
@@ -313,8 +309,6 @@ void NJDNode_add_mora_size(NJDNode * node, int size)
 {
    node->mora_size += size;
    if (node->mora_size < 0) {
-      fprintf(stderr,
-              "WARNING: NJDNode_add_mora_size() in njd_node.c: Mora size must be positive value.\n");
       node->mora_size = 0;
    }
 }
@@ -480,7 +474,6 @@ void NJDNode_load(NJDNode * node, const char *str)
       get_token_from_string(buff_acc, &index_acc, buff, '/');
       if (buff[0] == '\0') {
          j = 0;
-         fprintf(stderr, "WARNING: NJDNode_load() in njd_node.c: Accent is empty.\n");
       } else {
          j = atoi(buff);
       }
@@ -488,7 +481,6 @@ void NJDNode_load(NJDNode * node, const char *str)
       get_token_from_string(buff_acc, &index_acc, buff, ':');
       if (buff[0] == '\0') {
          j = 0;
-         fprintf(stderr, "WARNING: NJDNode_load() in njd_node.c: Mora size is empty.\n");
       } else {
          j = atoi(buff);
       }
@@ -531,7 +523,6 @@ void NJDNode_load(NJDNode * node, const char *str)
       get_token_from_string(buff_acc, &index_acc, buff, '/');
       if (buff[0] == '\0') {
          j = 0;
-         fprintf(stderr, "WARNING: NJDNode_load() in njd_node.c: Accent is empty.\n");
       } else {
          j = atoi(buff);
       }
@@ -540,7 +531,6 @@ void NJDNode_load(NJDNode * node, const char *str)
       get_token_from_string(buff_acc, &index_acc, buff, ':');
       if (buff[0] == '\0') {
          j = 0;
-         fprintf(stderr, "WARNING: NJDNode_load() in njd_node.c: Mora size is empty.\n");
       } else {
          j = atoi(buff);
       }
@@ -554,6 +544,7 @@ NJDNode *NJDNode_insert(NJDNode * prev, NJDNode * next, NJDNode * node)
    NJDNode *tail;
 
    if (prev == NULL || next == NULL) {
+      // never reach
       fprintf(stderr, "ERROR: NJDNode_insert() in njd_node.c: NJDNodes are not specified.\n");
       exit(1);
    }

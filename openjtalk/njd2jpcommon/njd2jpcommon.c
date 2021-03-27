@@ -96,9 +96,7 @@ static void convert_pos(char *buff, const char *pos, const char *pos_group1, con
          return;
       }
    }
-   fprintf(stderr,
-           "WARNING: convert_pos() in njd2jpcommon.c: %s %s %s %s are not appropriate POS.\n", pos,
-           pos_group1, pos_group2, pos_group3);
+
    strcpy(buff, njd2jpcommon_pos_list[4]);
 }
 
@@ -112,9 +110,6 @@ static void convert_ctype(char *buff, const char *ctype)
          return;
       }
    }
-   fprintf(stderr,
-           "WARNING: convert_ctype() in njd2jpcommon.c: %s is not appropriate conjugation type.\n",
-           ctype);
    strcpy(buff, njd2jpcommon_ctype_list[1]);
 }
 
@@ -128,9 +123,7 @@ static void convert_cform(char *buff, const char *cform)
          return;
       }
    }
-   fprintf(stderr,
-           "WARNING: convert_cform() in njd2jpcommon.c: %s is not appropriate conjugation form.\n",
-           cform);
+
    strcpy(buff, njd2jpcommon_cform_list[1]);
 }
 

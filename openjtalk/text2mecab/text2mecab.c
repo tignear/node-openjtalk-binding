@@ -131,7 +131,6 @@ void text2mecab(char *output, const char *input)
                output[index++] = input[s++];
          } else {
             /* unknown */
-            fprintf(stderr, "WARNING: text2mecab() in text2mecab.c: Wrong character.\n");
             s++;
          }
       }

@@ -130,9 +130,7 @@ static void JPCommonLabelPhoneme_convert_unvoice(JPCommonLabelPhoneme * p)
       }
    }
 
-   fprintf(stderr,
-           "WARNING: JPCommonLabelPhoneme_convert_unvoice() in jpcommon_label.c: %s cannot be unvoiced.\n",
-           p->phoneme);
+
 }
 
 static void JPCommonLabelPhoneme_clear(JPCommonLabelPhoneme * p)
@@ -173,9 +171,6 @@ static void JPCommonLabelWord_initialize(JPCommonLabelWord * w, const char *pron
       }
    }
    if (find == 0) {
-      fprintf(stderr,
-              "WARNING: JPCommonLabelWord_initialize() in jpcommon_label.c: %s is unknown POS.\n",
-              pos);
       i = 0;
    }
    w->pos = strdup(jpcommon_pos_list[i + 1]);
@@ -186,9 +181,6 @@ static void JPCommonLabelWord_initialize(JPCommonLabelWord * w, const char *pron
       }
    }
    if (find == 0) {
-      fprintf(stderr,
-              "WARNING: JPCommonLabelWord_initialize() in jpcommon_label.c: %s is unknown conjugation type.\n",
-              ctype);
       i = 0;
    }
    w->ctype = strdup(jpcommon_ctype_list[i + 1]);
@@ -199,9 +191,6 @@ static void JPCommonLabelWord_initialize(JPCommonLabelWord * w, const char *pron
       }
    }
    if (find == 0) {
-      fprintf(stderr,
-              "WARNING: JPCommonLabelWord_initialize() in jpcommon_label.c: %s is unknown conjugation form .\n",
-              cform);
       i = 0;
    }
    w->cform = strdup(jpcommon_cform_list[i + 1]);
@@ -424,8 +413,6 @@ static void JPCommonLabel_insert_pause(JPCommonLabel * label)
    if (label->short_pause_flag == 1) {
       if (label->phoneme_tail != NULL) {
          if (strcmp(label->phoneme_tail->phoneme, JPCOMMON_PHONEME_SHORT_PAUSE) == 0) {
-            fprintf(stderr,
-                    "WARNING: JPCommonLabel_insert_pause() in jpcommon_label.c: Short pause should not be chained.\n");
             return;
          }
          label->phoneme_tail->next =
@@ -433,9 +420,6 @@ static void JPCommonLabel_insert_pause(JPCommonLabel * label)
          JPCommonLabelPhoneme_initialize(label->phoneme_tail->next, JPCOMMON_PHONEME_SHORT_PAUSE,
                                          label->phoneme_tail, NULL, NULL);
          label->phoneme_tail = label->phoneme_tail->next;
-      } else {
-         fprintf(stderr,
-                 "WARNING: JPCommonLabel_insert_pause() in jpcommon_label.c: First mora should not be short pause.\n");
       }
       label->short_pause_flag = 0;
    }
@@ -463,9 +447,6 @@ void JPCommonLabel_push_word(JPCommonLabel * label, const char *pron, const char
             if (label->phoneme_tail->up->up->up->emotion == NULL)
                label->phoneme_tail->up->up->up->emotion = strdup(JPCOMMON_FLAG_QUESTION);
          }
-      } else {
-         fprintf(stderr,
-                 "WARNING: JPCommonLabel_push_word() in jpcommon_label.c: First mora should not be question flag.\n");
       }
       label->short_pause_flag = 1;
       return;
@@ -489,9 +470,6 @@ void JPCommonLabel_push_word(JPCommonLabel * label, const char *pron, const char
             label->phoneme_tail = label->phoneme_tail->next;
             label->mora_tail = label->mora_tail->next;
             label->word_tail->tail = label->mora_tail;
-         } else {
-            fprintf(stderr,
-                    "WARNING: JPCommonLabel_push_word() in jpcommon_label.c: First mora should not be long vowel symbol.\n");
          }
          pron += find;
       } else {
@@ -500,9 +478,6 @@ void JPCommonLabel_push_word(JPCommonLabel * label, const char *pron, const char
             /* for unvoice */
             if (label->phoneme_tail != NULL && is_first_word != 1)
                JPCommonLabelPhoneme_convert_unvoice(label->phoneme_tail);
-            else
-               fprintf(stderr,
-                       "WARNING: JPCommonLabel_push_word() in jpcommon_label.c: First mora should not be unvoice flag.\n");
             pron += find;
          } else {
             /* for normal word */
@@ -582,9 +557,6 @@ void JPCommonLabel_push_word(JPCommonLabel * label, const char *pron, const char
                }
                pron += find;
             } else {
-               fprintf(stderr,
-                       "WARNING: JPCommonLabel_push_word() in jpcommon_label.c: %s is wrong mora list.\n",
-                       pron);
                break;
             }
          }
@@ -661,7 +633,6 @@ void JPCommonLabel_make(JPCommonLabel * label)
    for (p = label->phoneme_head, label->size = 0; p != NULL; p = p->next)
       label->size++;
    if (label->size < 1) {
-      fprintf(stderr, "WARNING: JPCommonLabel_make() in jcomon_label.c: No phoneme.\n");
       return;
    }
    label->size += 2;
