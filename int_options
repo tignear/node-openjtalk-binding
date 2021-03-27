@@ -1,0 +1,3 @@
+      option<int64_t>("sampling_frequency", &Options::sampling_frequency, range<int64_t>(1), &Open_JTalk_set_sampling_frequency),
+      option<int64_t>("frame_period", &Options::frame_period, range<int64_t>(1), &Open_JTalk_set_fperiod),
+      option<int64_t>("audio_buffer_size", &Options::audio_buffer_size, range<int64_t>(0), &Open_JTalk_set_audio_buff_size)

@@ -1,7 +1,6 @@
 #include <napi.h>
 #include <open_jtalk.h>
 #include <limits>
-#include <initializer_list>
 
 /**compatibility of c++14**/
 #if __cplusplus >= 201703L
@@ -28,14 +27,22 @@ struct Options
   optional<double> volume_in_dB;
 };
 
-/**compatibility of c++14**/
 #if __cplusplus >= 201703L
-/**c++17**/
-#define option_list std::initializer_list
+#define option_return auto
 #else
-/**c++14**/
+#include <array>
 #include <functional>
-using option_list = std::initializer_list<std::tuple<std::function<void(Options *options, Napi::Object &js_options)>, std::function<void(Open_JTalk *open_jtalk, Options *opt)>>>;
+
+#define option_return std::tuple<std::function<void(Options *options, Napi::Object &js_options)>, std::function<void(Open_JTalk *open_jtalk, Options *opt)>>
+
+template <size_t N>
+using option_list = std::array<option_return, N>;
+
+template <typename... Args>
+static constexpr inline option_list<sizeof...(Args)> make_array(Args &&... args)
+{
+  return option_list<sizeof...(Args)>{std::forward<Args>(args)...};
+}
 #endif
 
 using namespace std::literals::string_literals;
@@ -56,7 +63,7 @@ constexpr auto range(T min = std::numeric_limits<T>::min(), T max = std::numeric
 }
 
 template <class T = Napi::Number, class U = T, class F>
-constexpr auto option(
+constexpr option_return option(
     const char *key,
     optional<U> Options::*m,
     F r,
@@ -90,45 +97,26 @@ constexpr auto option(
   };
   return std::make_tuple(extract, set);
 }
-inline static constexpr auto int_option_list_fun()
-{
-  return option_list{
-      option<int64_t>("sampling_frequency", &Options::sampling_frequency, range<int64_t>(1), &Open_JTalk_set_sampling_frequency),
-      option<int64_t>("frame_period", &Options::frame_period, range<int64_t>(1), &Open_JTalk_set_fperiod),
-      option<int64_t>("audio_buffer_size", &Options::audio_buffer_size, range<int64_t>(0), &Open_JTalk_set_audio_buff_size),
-  };
-}
-inline static constexpr auto double_option_list_fun()
-{
-  return option_list{
-      option("all_pass_constant", &Options::all_pass_constant, range(0.0, 1.0), &Open_JTalk_set_alpha),
-      option("postfiltering_coefficient", &Options::postfiltering_coefficient, range(0.0, 1.0), &Open_JTalk_set_beta),
-      option("speech_speed_rate", &Options::speech_speed_rate, range(0.0), &Open_JTalk_set_speed),
-      option("additional_half_tone", &Options::additional_half_tone, range<double>(), &Open_JTalk_add_half_tone),
-      option<Napi::Number, double>("voiced_unvoiced_threshold", &Options::voiced_unvoiced_threshold, range(0.0, 1.0), [](Open_JTalk *open_jtalk, double value) {
-        Open_JTalk_set_msd_threshold(open_jtalk, 1, value);
-      }),
-      option<Napi::Number, double>("weight_of_GV_for_spectrum", &Options::weight_of_GV_for_spectrum, range(0.0), [](Open_JTalk *open_jtalk, double value) {
-        Open_JTalk_set_gv_weight(open_jtalk, 0, value);
-      }),
-      option<Napi::Number, double>("weight_of_GV_for_log_F0", &Options::weight_of_GV_for_log_F0, range(0.0), [](Open_JTalk *open_jtalk, double value) {
-        Open_JTalk_set_gv_weight(open_jtalk, 1, value);
-      }),
-      option("volume_in_dB", &Options::volume_in_dB, range<double>(), &Open_JTalk_set_volume),
-  };
-}
 
 #if __cplusplus >= 201703L
-const static constexpr auto int_option_list = int_option_list_fun();
-const static constexpr auto double_option_list = double_option_list_fun();
+const static constexpr auto int_option_list = {
+#include "int_options"
+};
+const static constexpr auto double_option_list = {
+#include "double_options"
+};
 #endif
 
 template <size_t idx, class Dst, class Src>
 inline void OptionsLoop(Dst dst, Src src)
 {
 #if __cplusplus < 201703L
-  auto int_option_list = int_option_list_fun();
-  auto double_option_list = double_option_list_fun();
+  auto int_option_list = make_array(
+#include "int_options"
+  );
+  auto double_option_list = make_array(
+#include "double_options"
+  );
 #endif
   for (auto &entry : int_option_list)
   {
