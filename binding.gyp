@@ -61,16 +61,17 @@
             "cflags_cc":[
                 "-std=c++17",
                 "-fexceptions",
-                "-fPIC"
+                "-fPIC",
+                "-O2"
             ],
             'msvs_settings': {
                 'VCCLCompilerTool': {
-                    'AdditionalOptions': ['-std:c++17', "/utf-8", "/D NOMINMAX", "/EHsc"],
+                    'AdditionalOptions': ['-std:c++17', "/utf-8", "/D NOMINMAX", "/EHsc","/O2"],
                 },
             },
             'xcode_settings': {
                 'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-                'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++'],
+                'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++',"-O2"],
                 'OTHER_LDFLAGS': ['-stdlib=libc++'],
                 'MACOSX_DEPLOYMENT_TARGET': '10.14',
             },
