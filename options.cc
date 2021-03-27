@@ -94,7 +94,7 @@ const static constexpr auto double_option_list = {
 };
 
 template <size_t idx, class Dst, class Src>
-void OptionsLoop(Dst dst, Src src)
+inline void OptionsLoop(Dst dst, Src src)
 {
   for (auto &entry : int_option_list)
   {
