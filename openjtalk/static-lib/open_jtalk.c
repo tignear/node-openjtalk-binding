@@ -27,7 +27,7 @@ void Open_JTalk_clear(Open_JTalk *open_jtalk)
   HTS_Engine_clear(&open_jtalk->engine);
 }
 
-int Open_JTalk_load(Open_JTalk *open_jtalk,const char *dn_mecab,const char *fn_voice)
+int Open_JTalk_load(Open_JTalk *open_jtalk, const char *dn_mecab, const char *fn_voice)
 {
   if (Mecab_load(&open_jtalk->mecab, dn_mecab) != TRUE)
   {
@@ -100,7 +100,7 @@ void Open_JTalk_set_audio_buff_size(Open_JTalk *open_jtalk, size_t i)
 int Open_JTalk_synthesis(Open_JTalk *open_jtalk, const char *txt, signed short **pcm, size_t *length_of_pcm)
 {
   int result = 0;
-  char *buff = malloc(strlen(txt) + 1);
+  char *buff = malloc(strlen(txt) * 4 + 1);
 
   text2mecab(buff, txt);
   Mecab_analysis(&open_jtalk->mecab, buff);
@@ -125,6 +125,7 @@ int Open_JTalk_synthesis(Open_JTalk *open_jtalk, const char *txt, signed short *
   JPCommon_refresh(&open_jtalk->jpcommon);
   NJD_refresh(&open_jtalk->njd);
   Mecab_refresh(&open_jtalk->mecab);
-
+  free(buff);
+  
   return result;
 }
