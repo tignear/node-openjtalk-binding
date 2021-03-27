@@ -66,7 +66,7 @@
             ],
             'msvs_settings': {
                 'VCCLCompilerTool': {
-                    'AdditionalOptions': ['-std:c++17', "/utf-8", "/D NOMINMAX", "/EHsc","/O2"],
+                    'AdditionalOptions': ['/std:c++17', "/utf-8", "/D NOMINMAX", "/EHsc","/O2","/Zc:__cplusplus"],
                 },
             },
             'xcode_settings': {

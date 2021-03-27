@@ -1,17 +1,33 @@
 #include <napi.h>
 #include <thread>
 #include <open_jtalk.h>
-#include <variant>
 #include <string>
 #include "options.cc"
+
+/**compatibility of c++14**/
+#if __cplusplus >= 201703L
+/**c++17**/
+#include <variant>
+using std::variant;
+using std::holds_alternative;
+using std::get;
+#else
+/**c++14**/
+#include "nonstd/variant.hpp"
+using nonstd::variant;
+using nonstd::holds_alternative;
+using nonstd::get;
+#endif
+
 using Context = Napi::Reference<Napi::Value>;
+
 struct Wave
 {
   size_t length;
   signed short *value;
   size_t sampling_frequency;
 };
-using DataType = std::variant<Wave, const char *>;
+using DataType = variant<Wave, const char *>;
 void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *data);
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 using FinalizerDataType = void;
@@ -138,9 +154,9 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context,
     // does ensure a callback is provided.
     if (callback != nullptr)
     {
-      if (std::holds_alternative<Wave>(*data))
+      if (holds_alternative<Wave>(*data))
       {
-        auto wave = std::get<Wave>(*data);
+        auto wave = get<Wave>(*data);
         auto buffer = Napi::Buffer<signed short>::New(
             env, wave.value, wave.length, [](Napi::Env, signed short *pcm) {
               free(pcm);
@@ -149,7 +165,7 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context,
       }
       else
       {
-        auto msg = std::get<const char *>(*data);
+        auto msg = get<const char *>(*data);
         callback.Call(context->Value(), {Napi::Error::New(env, msg).Value()});
       }
     }
