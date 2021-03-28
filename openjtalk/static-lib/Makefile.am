@@ -17,7 +17,8 @@ AM_CPPFLAGS = -I @top_srcdir@/text2mecab \
               -I @top_srcdir@/njd_set_long_vowel \
               -I @top_srcdir@/njd2jpcommon \
               -I @top_srcdir@/jpcommon \
-              -I @HTS_ENGINE_HEADER_DIR@
+              -I @HTS_ENGINE_HEADER_DIR@ \
+              -fPIC
 
 noinst_LIBRARIES = libOpenJTalk.a
 
