@@ -2,9 +2,9 @@ export function synthesis(text: string, options: OpenJTalkOptions): Promise<Wave
 export var dictionary_dir: string;
 export type OpenJTalkOptions = {
     /**
-     * Path to dictionary. NOT be URL nor Buffer.
+     * Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
      */
-    dictionary: string;
+    dictionary?: string;
     /**
      * Path to htsvoice. NOT be URL nor Buffer.
      */

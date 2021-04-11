@@ -5,11 +5,11 @@
 
 const { synthesis: _synthesis } = require("bindings")("addon");
 const path = require("path");
-
+const dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
 /**
  * @typedef {Object} OpenJTalkOptions
- * @property {!string} dictionary Path to dictionary. NOT be URL nor Buffer.
  * @property {!string} htsvoice Path to htsvoice. NOT be URL nor Buffer.
+ * @property {?string} dictionary Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
  * @property {?number} sampling_frequency Must be int. 1<=sampling_frequency.
  * @property {?number} frame_period Must be int. 1<=frame_period.
  * @property {?number} all_pass_constant 0.0<=all_pass_constant<=1.0.
@@ -42,7 +42,7 @@ const path = require("path");
 exports.synthesis = function synthesis(text, options) {
   return new Promise((resolve, reject) => {
     try {
-      _synthesis((err, /**@type {Buffer}*/buffer, /** @type {number} */ sampleRate) => {
+      _synthesis((err, /** @type {Buffer} */ buffer, /** @type {number} */ sampleRate) => {
         if (err) {
           reject(err);
           return;
@@ -58,7 +58,7 @@ exports.synthesis = function synthesis(text, options) {
           sampleRate
         };
         resolve(wave);
-      }, text, options);
+      }, text, { dictionary, ...options });
     } catch (err) {
       reject(err);
     }
@@ -69,4 +69,4 @@ exports.synthesis = function synthesis(text, options) {
  * Path to builded dictionary.
  * @type {string} 
  * */
-exports.dictionary_dir = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+exports.dictionary_dir = dictionary;
