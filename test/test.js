@@ -1,10 +1,12 @@
 const { synthesis, dictionary_dir } = require("../addon");
 const path = require("path");
-const { promises: fs } = require("fs");
+const { promises: fs, readFileSync } = require("fs");
+const path_to_htsvoice = path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice");
+const htsvoice = readFileSync(path_to_htsvoice);
 async function test() {
   const text = await fs.readFile(path.resolve(__dirname, "./test.txt"), "utf-8");
   const p = synthesis(text, {
-    htsvoice: path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
+    htsvoice,
     dictionary: dictionary_dir,
   });
   const p2 = fs.readFile(path.resolve(__dirname, "./test.bin"));

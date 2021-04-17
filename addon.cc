@@ -32,7 +32,7 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 using FinalizerDataType = void;
 
-void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, void *&voice_data, size_t length_of_voice_data, Options *options)
+void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, void *&voice_data, size_t &length_of_voice_data, Options *options)
 {
   Napi::Env env = info.Env();
   if (info.Length() < 3)
