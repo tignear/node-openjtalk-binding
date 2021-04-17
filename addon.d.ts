@@ -6,9 +6,9 @@ export type OpenJTalkOptions = {
      */
     dictionary?: string;
     /**
-     * Path to htsvoice. NOT be URL nor Buffer.
+     * Path to htsvoice. Path to htsvoice. Or data ArrayBuffer,Buffer.
      */
-    htsvoice: string;
+    htsvoice: string | ArrayBuffer | Uint8Array;
     /**
      * Must be int. 1<=sampling_frequency.
      */
