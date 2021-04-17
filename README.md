@@ -19,7 +19,7 @@ yarn add node-openjtalk-binding
 ## Example
 
 ```js
-const { synthesis, dictionary_dir } = require("node-openjtalk-binding");
+const { synthesis } = require("node-openjtalk-binding");
 const path = require("path");
 const { promises: fs, readFileSync } = require("fs");
 const path_to_htsvoice = path.resolve(__dirname, "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice");

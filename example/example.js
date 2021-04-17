@@ -1,9 +1,10 @@
-const { synthesis, dictionary_dir } = require("../addon");
+const { synthesis } = require("../addon");
 const path = require("path");
-const { promises: fs } = require("fs");
+const { promises: fs, readFileSync } = require("fs");
+const path_to_htsvoice = path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice");
+const htsvoice = readFileSync(path_to_htsvoice);
 synthesis("竹やぶ焼けた。", {
-  htsvoice: path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
-  dictionary: dictionary_dir,
+  htsvoice,
 }).then(wave => {
   const wav = Buffer.alloc(wave.data.byteLength + 44);
   createWAV(new DataView(wav.buffer), wave);
@@ -13,7 +14,7 @@ synthesis("竹やぶ焼けた。", {
 /**
  * 
  * @param {DataView} view 
- * @param {import("../addon").WaveObject} wave
+ * @param {import("node-openjtalk-binding").WaveObject} wave
  */
 function createWAV(view, wave) {
   const blockSize = wave.numChannels * wave.bitDepth / 8;
