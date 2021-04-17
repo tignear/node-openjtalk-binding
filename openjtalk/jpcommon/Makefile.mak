@@ -1,7 +1,7 @@
 
 CC = cl
 
-CFLAGS = /O2 /Ob2 /Oi /Ot /Oy /GT /GL /TC /D CHARSET_UTF_8 /utf-8
+CFLAGS = /O3 /Ob2 /Oi /Ot /Oy /GT /GL /TC /D CHARSET_UTF_8 /utf-8
 LFLAGS = /LTCG
 
 CORES = jpcommon.obj jpcommon_node.obj jpcommon_label.obj

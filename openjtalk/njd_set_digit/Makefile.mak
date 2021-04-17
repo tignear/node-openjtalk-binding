@@ -1,7 +1,7 @@
 
 CC = cl
 
-CFLAGS = /O2 /Ob2 /Oi /Ot /Oy /GT /GL /TC /I ../njd /D CHARSET_UTF_8_SHIFT_JIS /utf-8
+CFLAGS = /O3 /Ob2 /Oi /Ot /Oy /GT /GL /TC /I ../njd /D CHARSET_UTF_8_SHIFT_JIS /utf-8
 LFLAGS = /LTCG
 
 CORES = njd_set_digit.obj

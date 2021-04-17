@@ -199,11 +199,11 @@ AC_MSG_RESULT([yes])
 if test -n "$GCC"; then
 case "$host_os" in
    *cygwin* )
-      CFLAGS="-O2 -Wall -g -D__CYGWIN__ $CFLAGS "
+      CFLAGS="-O3 -Wall -g -D__CYGWIN__ $CFLAGS "
       CXXFLAGS="-O3 -Wall -Wno-deprecated -D__CYGWIN__ $CXXFLAGS "
       ;;
    *)
-      CFLAGS="-O2 -Wall -g $CFLAGS"
+      CFLAGS="-O3 -Wall -g $CFLAGS"
       CXXFLAGS="-O3 -Wall -Wno-deprecated $CXXFLAGS "
       ;;
 esac
