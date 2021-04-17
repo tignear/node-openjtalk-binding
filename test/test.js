@@ -7,7 +7,6 @@ async function test() {
   const text = await fs.readFile(path.resolve(__dirname, "./test.txt"), "utf-8");
   const p = synthesis(text, {
     htsvoice,
-    dictionary: dictionary_dir,
   });
   const p2 = fs.readFile(path.resolve(__dirname, "./test.bin"));
   const wave = await p;

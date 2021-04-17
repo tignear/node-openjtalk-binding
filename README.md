@@ -21,10 +21,11 @@ yarn add node-openjtalk-binding
 ```js
 const { synthesis, dictionary_dir } = require("node-openjtalk-binding");
 const path = require("path");
-const { promises: fs } = require("fs");
+const { promises: fs, readFileSync } = require("fs");
+const path_to_htsvoice = path.resolve(__dirname, "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice");
+const htsvoice = readFileSync(path_to_htsvoice);
 synthesis("竹やぶ焼けた。", {
-  htsvoice: path.resolve(__dirname, "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
-  dictionary: dictionary_dir,
+  htsvoice,
 }).then(wave => {
   const wav = Buffer.alloc(wave.data.byteLength + 44);
   createWAV(new DataView(wav.buffer), wave);
