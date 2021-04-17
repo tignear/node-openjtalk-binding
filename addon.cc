@@ -8,15 +8,15 @@
 #if __cplusplus >= 201703L
 /**c++17**/
 #include <variant>
-using std::variant;
-using std::holds_alternative;
 using std::get;
+using std::holds_alternative;
+using std::variant;
 #else
 /**c++14**/
 #include "nonstd/variant.hpp"
-using nonstd::variant;
-using nonstd::holds_alternative;
 using nonstd::get;
+using nonstd::holds_alternative;
+using nonstd::variant;
 #endif
 
 using Context = Napi::Reference<Napi::Value>;
@@ -32,7 +32,7 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 using FinalizerDataType = void;
 
-void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, std::string &fn_voice, Options *options)
+void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, void *&voice_data, size_t length_of_voice_data, Options *options)
 {
   Napi::Env env = info.Env();
   if (info.Length() < 3)
@@ -67,14 +67,16 @@ void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::strin
     throw Napi::TypeError::New(env, "Expected options to have htsvoice.");
   }
   auto htsvoice_js_value = js_options.Get("htsvoice");
-  if (!htsvoice_js_value.IsString())
+  if (!htsvoice_js_value.IsArrayBuffer())
   {
-    throw Napi::TypeError::New(env, "Expected htsvoice to be string.");
+    throw Napi::TypeError::New(env, "Expected htsvoice to be ArrayBuffer.");
   }
 
   text = info[1].As<Napi::String>().Utf8Value();
   dn_dict = dictionary_js_value.As<Napi::String>();
-  fn_voice = htsvoice_js_value.As<Napi::String>();
+  auto buff = htsvoice_js_value.As<Napi::ArrayBuffer>();
+  voice_data = buff.Data();
+  length_of_voice_data = buff.ByteLength();
   ExtractOptions(options, js_options);
 }
 Napi::Value Synthesis(const Napi::CallbackInfo &info)
@@ -83,9 +85,10 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
 
   std::string text;
   std::string dn_dict;
-  std::string fn_voice;
+  void *voice_data;
+  size_t length_of_voice_data;
   Options options;
-  LoadArguments(info, text, dn_dict, fn_voice, &options);
+  LoadArguments(info, text, dn_dict, voice_data, length_of_voice_data, &options);
   Context *context = new Napi::Reference<Napi::Value>(Napi::Persistent(info.This()));
   TSFN tsfn = TSFN::New(
       env,
@@ -99,12 +102,12 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
         delete ctx;
       });
 
-  auto lambda = [tsfn, dn_dict, fn_voice, text, options]() mutable {
+  auto lambda = [tsfn, dn_dict, voice_data, length_of_voice_data, text, options]() mutable {
     Open_JTalk open_jtalk;
 
     Open_JTalk_initialize(&open_jtalk);
 
-    int code = Open_JTalk_load(&open_jtalk, dn_dict.c_str(), fn_voice.c_str());
+    int code = Open_JTalk_load(&open_jtalk, dn_dict.c_str(), voice_data, length_of_voice_data);
     if (code)
     {
       switch (code)

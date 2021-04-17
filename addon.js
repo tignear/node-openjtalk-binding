@@ -6,9 +6,10 @@
 const { synthesis: _synthesis } = require("bindings")("addon");
 const path = require("path");
 const dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+const { promises: fs } = require("fs");
 /**
  * @typedef {Object} OpenJTalkOptions
- * @property {!string} htsvoice Path to htsvoice. NOT be URL nor Buffer.
+ * @property {!string|Uint8Array|ArrayBuffer} htsvoice Path to htsvoice. Or data ArrayBuffer,Buffer.
  * @property {?string} dictionary Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
  * @property {?number} sampling_frequency Must be int. 1<=sampling_frequency.
  * @property {?number} frame_period Must be int. 1<=frame_period.
@@ -39,26 +40,34 @@ const dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
  * @param {OpenJTalkOptions} options OpenJTalk synthesize option.
  * @return {Promise<WaveObject>} Synthesized PCM.
  */
-exports.synthesis = function synthesis(text, options) {
+exports.synthesis = async function synthesis(text, options) {
+  let htsvoice = options.htsvoice;
+  if (typeof htsvoice === "string") {
+    htsvoice = await fs.readFile(htsvoice);
+  }
+  if (htsvoice instanceof Uint8Array) {
+    htsvoice = htsvoice.buffer;
+  }
   return new Promise((resolve, reject) => {
+    function cb(err, /** @type {Buffer} */ buffer, /** @type {number} */ sampleRate) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      /**
+       * @type {WaveObject}
+       */
+      const wave = {
+        raw_data: buffer,
+        data: new Int16Array(buffer.buffer),
+        bitDepth: 16,
+        numChannels: 1,
+        sampleRate
+      };
+      resolve(wave);
+    }
     try {
-      _synthesis((err, /** @type {Buffer} */ buffer, /** @type {number} */ sampleRate) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        /**
-         * @type {WaveObject}
-         */
-        const wave = {
-          raw_data: buffer,
-          data: new Int16Array(buffer.buffer),
-          bitDepth: 16,
-          numChannels: 1,
-          sampleRate
-        };
-        resolve(wave);
-      }, text, { dictionary, ...options });
+      _synthesis(cb, text, { dictionary, ...options, htsvoice });
     } catch (err) {
       reject(err);
     }

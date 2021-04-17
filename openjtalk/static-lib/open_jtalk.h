@@ -21,7 +21,7 @@ typedef struct _Open_JTalk {
 } Open_JTalk;
 void Open_JTalk_initialize(Open_JTalk *open_jtalk);
 void Open_JTalk_clear(Open_JTalk *open_jtalk);
-int Open_JTalk_load(Open_JTalk *open_jtalk,const char *dn_mecab,const char *fn_voice);
+int Open_JTalk_load(Open_JTalk *open_jtalk,const char *dn_mecab,void *voice_data,size_t length_of_voice_data);
 void Open_JTalk_set_sampling_frequency(Open_JTalk *open_jtalk, size_t i);
 void Open_JTalk_set_fperiod(Open_JTalk *open_jtalk, size_t i);
 void Open_JTalk_set_alpha(Open_JTalk *open_jtalk, double f);

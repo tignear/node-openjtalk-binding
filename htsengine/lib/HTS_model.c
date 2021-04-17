@@ -890,7 +890,7 @@ static HTS_Boolean HTS_strequal(const char *s1, const char *s2)
 }
 
 /* HTS_ModelSet_load: load model set */
-HTS_Boolean HTS_ModelSet_load(HTS_ModelSet * ms, char **voices, size_t num_voices)
+HTS_Boolean HTS_ModelSet_load(HTS_ModelSet * ms, void **voices, size_t* voice_sizes,size_t num_voices)
 {
    size_t i, j, k, s, e;
    HTS_Boolean error = FALSE;
@@ -949,7 +949,7 @@ HTS_Boolean HTS_ModelSet_load(HTS_ModelSet * ms, char **voices, size_t num_voice
 
    for (i = 0; i < num_voices && error == FALSE; i++) {
       /* open file */
-      fp = HTS_fopen_from_fn(voices[i], "rb");
+      fp = HTS_fopen_from_data(voices[i], voice_sizes[i]);
       if (fp == NULL) {
          error = TRUE;
          break;

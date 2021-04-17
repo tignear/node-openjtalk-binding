@@ -27,14 +27,14 @@ void Open_JTalk_clear(Open_JTalk *open_jtalk)
   HTS_Engine_clear(&open_jtalk->engine);
 }
 
-int Open_JTalk_load(Open_JTalk *open_jtalk, const char *dn_mecab, const char *fn_voice)
+int Open_JTalk_load(Open_JTalk *open_jtalk, const char *dn_mecab, void *voice_data, size_t length_of_voice_data)
 {
   if (Mecab_load(&open_jtalk->mecab, dn_mecab) != TRUE)
   {
     Open_JTalk_clear(open_jtalk);
     return 1;
   }
-  if (HTS_Engine_load(&open_jtalk->engine, &fn_voice, 1) != TRUE)
+  if (HTS_Engine_load(&open_jtalk->engine, &voice_data, &length_of_voice_data, 1) != TRUE)
   {
     Open_JTalk_clear(open_jtalk);
     return 2;
@@ -126,6 +126,6 @@ int Open_JTalk_synthesis(Open_JTalk *open_jtalk, const char *txt, signed short *
   NJD_refresh(&open_jtalk->njd);
   Mecab_refresh(&open_jtalk->mecab);
   free(buff);
-  
+
   return result;
 }

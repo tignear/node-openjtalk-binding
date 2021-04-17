@@ -109,7 +109,7 @@ void HTS_Engine_initialize(HTS_Engine *engine)
 }
 
 /* HTS_Engine_load: load HTS voices */
-HTS_Boolean HTS_Engine_load(HTS_Engine *engine, char **voices, size_t num_voices)
+HTS_Boolean HTS_Engine_load(HTS_Engine *engine, void **voices, size_t *voice_sizes, size_t num_voices)
 {
    size_t i, j;
    size_t nstream;
@@ -120,7 +120,7 @@ HTS_Boolean HTS_Engine_load(HTS_Engine *engine, char **voices, size_t num_voices
    HTS_Engine_clear(engine);
 
    /* load voices */
-   if (HTS_ModelSet_load(&engine->ms, voices, num_voices) != TRUE)
+   if (HTS_ModelSet_load(&engine->ms, voices, voice_sizes, num_voices) != TRUE)
    {
       HTS_Engine_clear(engine);
       return FALSE;

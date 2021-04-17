@@ -23,6 +23,7 @@
   "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.0.0-rc.9",
   "gypfile": true,
   "devDependencies": {
+    "@types/node": "^14.14.41",
     "clean-jsdoc-theme": "^3.0.9",
     "jsdoc": "^3.6.6",
     "typescript": "^4.2.3"
