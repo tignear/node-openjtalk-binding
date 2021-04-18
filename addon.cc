@@ -1,3 +1,4 @@
+#define NAPI_VERSION 5
 #include <napi.h>
 #include <thread>
 #include <open_jtalk.h>
@@ -20,11 +21,8 @@ using nonstd::holds_alternative;
 using nonstd::variant;
 #endif
 
-struct Context
-{
-  Napi::Reference<Napi::Value> self;
-  Napi::Reference<Napi::ArrayBuffer> buffer;
-};
+using Context = Napi::Reference<Napi::Value>;
+
 struct Wave
 {
   size_t length;
@@ -32,16 +30,53 @@ struct Wave
   size_t sampling_frequency;
 };
 using DataType = variant<Wave, const char *>;
-void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *data);
-using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
+void CallJs(Napi::Env env, Napi::Function callback, Context *context,
+            DataType *data)
+{
+
+  if (env != nullptr)
+  {
+    if (callback != nullptr)
+    {
+      if (holds_alternative<Wave>(*data))
+      {
+        auto wave = get<Wave>(*data);
+        auto buffer = Napi::Buffer<signed short>::New(
+            env, wave.value, wave.length, [](Napi::Env, signed short *pcm) {
+              free(pcm);
+            });
+        callback.Call(context->Value(), {env.Null(), buffer, Napi::Number::New(env, wave.sampling_frequency)});
+      }
+      else
+      {
+        auto msg = get<const char *>(*data);
+        callback.Call(context->Value(), {Napi::Error::New(env, msg).Value()});
+      }
+    }
+  }
+  if (data != nullptr)
+  {
+    // We're finished with the data.
+    delete data;
+  }
+}
+void CallRelease(Napi::Env env, Napi::Function callback, std::nullptr_t *, Napi::Reference<Napi::ArrayBuffer> *data)
+{
+  delete data;
+}
+using ResultTSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
+using ReleaseTSFN = Napi::TypedThreadSafeFunction<std::nullptr_t, Napi::Reference<Napi::ArrayBuffer>, CallRelease>;
+
 using FinalizerDataType = void;
-void taskFunc(TSFN tsfn, const std::string &dn_dict, void *voice_data, size_t length_of_voice_data, const std::string &text, const Options &options)
+void taskFunc(ResultTSFN tsfn, ReleaseTSFN releaseBuffer, Napi::Reference<Napi::ArrayBuffer> *buffer_ref, const std::string &dn_dict, void *voice_data, size_t length_of_voice_data, const std::string &text, const Options &options)
 {
   Open_JTalk open_jtalk;
 
   Open_JTalk_initialize(&open_jtalk);
 
   int code = Open_JTalk_load(&open_jtalk, dn_dict.c_str(), voice_data, length_of_voice_data);
+  releaseBuffer.NonBlockingCall(buffer_ref);
+  releaseBuffer.Release();
   if (code)
   {
     switch (code)
@@ -132,57 +167,25 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
   LoadArguments(info, text, dn_dict, voice_array_buff, options);
   void *voice_data = voice_array_buff.Data();
   size_t length_of_voice_data = voice_array_buff.ByteLength();
-  Context *context = new Context;
-  context->self = Napi::Persistent(info.This());
-  context->buffer = Napi::Persistent(voice_array_buff);
-  TSFN tsfn = TSFN::New(
+  Context *context = new Context(Napi::Persistent(info.This()));
+  auto voice_array_buff_ref = new Napi::Reference<Napi::ArrayBuffer>(Napi::Persistent(voice_array_buff));
+  ResultTSFN tsfn = ResultTSFN::New(
       env,
       info[0].As<Napi::Function>(),
       "Synthesis Callback",
-      0,
+      1,
       1,
       context,
       [](Napi::Env, FinalizerDataType *,
          Context *ctx) {
         delete ctx;
       });
-
-  pool.submit(taskFunc, tsfn, std::move(dn_dict), voice_data, length_of_voice_data, std::move(text), std::move(options));
+  ReleaseTSFN rtsfn = ReleaseTSFN::New(
+      env,
+      "Release htsvoice ArrayBuffer",
+      1, 1, nullptr);
+  pool.submit(taskFunc, tsfn, rtsfn, voice_array_buff_ref, std::move(dn_dict), voice_data, length_of_voice_data, std::move(text), std::move(options));
   return env.Undefined();
-}
-
-void CallJs(Napi::Env env, Napi::Function callback, Context *context,
-            DataType *data)
-{
-  // Is the JavaScript environment still available to call into, eg. the TSFN is
-  // not aborted
-  if (env != nullptr)
-  {
-    // On N-API 5+, the `callback` parameter is optional; however, this example
-    // does ensure a callback is provided.
-    if (callback != nullptr)
-    {
-      if (holds_alternative<Wave>(*data))
-      {
-        auto wave = get<Wave>(*data);
-        auto buffer = Napi::Buffer<signed short>::New(
-            env, wave.value, wave.length, [](Napi::Env, signed short *pcm) {
-              free(pcm);
-            });
-        callback.Call(context->self.Value(), {env.Null(), buffer, Napi::Number::New(env, wave.sampling_frequency)});
-      }
-      else
-      {
-        auto msg = get<const char *>(*data);
-        callback.Call(context->self.Value(), {Napi::Error::New(env, msg).Value()});
-      }
-    }
-  }
-  if (data != nullptr)
-  {
-    // We're finished with the data.
-    delete data;
-  }
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
