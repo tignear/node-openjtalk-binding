@@ -69,7 +69,7 @@ constexpr option_return option(
     F r,
     void (*config_fn)(Open_JTalk *, U))
 {
-  auto extract = [key, r, m](Options *options,
+  auto extract = [key, r, m](Options &options,
                              Napi::Object &js_options) {
     Napi::Env env = js_options.Env();
 
@@ -81,7 +81,7 @@ constexpr option_return option(
       {
         throw Napi::TypeError::New(env, key + " is out of range."s);
       }
-      *options.*m = d;
+      options.*m = d;
     }
     else
     {
@@ -128,7 +128,7 @@ inline void OptionsLoop(Dst dst, Src src)
   }
 }
 
-void ExtractOptions(Options *options, Napi::Object &js_options)
+void ExtractOptions(Options &options, Napi::Object &js_options)
 {
   OptionsLoop<0>(options, js_options);
 }

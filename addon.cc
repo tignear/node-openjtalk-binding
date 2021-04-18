@@ -20,8 +20,11 @@ using nonstd::holds_alternative;
 using nonstd::variant;
 #endif
 
-using Context = Napi::Reference<Napi::Value>;
-
+struct Context
+{
+  Napi::Reference<Napi::Value> self;
+  Napi::Reference<Napi::ArrayBuffer> buffer;
+};
 struct Wave
 {
   size_t length;
@@ -71,7 +74,7 @@ void taskFunc(TSFN tsfn, const std::string &dn_dict, void *voice_data, size_t le
       length_of_pcm, pcm, open_jtalk.engine.condition.sampling_frequency}));
   tsfn.Release();
 }
-void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, void *&voice_data, size_t &length_of_voice_data, Options *options)
+void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, Napi::ArrayBuffer &voice_array_buff, Options &options)
 {
   Napi::Env env = info.Env();
   if (info.Length() < 3)
@@ -113,9 +116,8 @@ void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::strin
 
   text = info[1].As<Napi::String>().Utf8Value();
   dn_dict = dictionary_js_value.As<Napi::String>();
-  auto buff = htsvoice_js_value.As<Napi::ArrayBuffer>();
-  voice_data = buff.Data();
-  length_of_voice_data = buff.ByteLength();
+  voice_array_buff = htsvoice_js_value.As<Napi::ArrayBuffer>();
+
   ExtractOptions(options, js_options);
 }
 thread_pool pool(std::thread::hardware_concurrency() * 2);
@@ -125,11 +127,14 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
 
   std::string text;
   std::string dn_dict;
-  void *voice_data;
-  size_t length_of_voice_data;
+  Napi::ArrayBuffer voice_array_buff;
   Options options;
-  LoadArguments(info, text, dn_dict, voice_data, length_of_voice_data, &options);
-  Context *context = new Napi::Reference<Napi::Value>(Napi::Persistent(info.This()));
+  LoadArguments(info, text, dn_dict, voice_array_buff, options);
+  void *voice_data = voice_array_buff.Data();
+  size_t length_of_voice_data = voice_array_buff.ByteLength();
+  Context *context = new Context;
+  context->self = Napi::Persistent(info.This());
+  context->buffer = Napi::Persistent(voice_array_buff);
   TSFN tsfn = TSFN::New(
       env,
       info[0].As<Napi::Function>(),
@@ -142,7 +147,7 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
         delete ctx;
       });
 
-  pool.submit(taskFunc, tsfn, dn_dict, voice_data, length_of_voice_data, text, options);
+  pool.submit(taskFunc, tsfn, std::move(dn_dict), voice_data, length_of_voice_data, std::move(text), std::move(options));
   return env.Undefined();
 }
 
@@ -164,12 +169,12 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context,
             env, wave.value, wave.length, [](Napi::Env, signed short *pcm) {
               free(pcm);
             });
-        callback.Call(context->Value(), {env.Null(), buffer, Napi::Number::New(env, wave.sampling_frequency)});
+        callback.Call(context->self.Value(), {env.Null(), buffer, Napi::Number::New(env, wave.sampling_frequency)});
       }
       else
       {
         auto msg = get<const char *>(*data);
-        callback.Call(context->Value(), {Napi::Error::New(env, msg).Value()});
+        callback.Call(context->self.Value(), {Napi::Error::New(env, msg).Value()});
       }
     }
   }

@@ -167,13 +167,6 @@ BOOL Mecab_analysis(Mecab *m, const char *str)
    return TRUE;
 }
 
-BOOL Mecab_print(Mecab *m)
-{
-   int i;
-
-   for(i = 0; i < m->size; i++)
-   return TRUE;
-}
 
 int Mecab_get_size(Mecab *m)
 {

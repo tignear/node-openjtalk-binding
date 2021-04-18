@@ -64,14 +64,23 @@
                 "-fPIC",
                 "-O3"
             ],
-            'msvs_settings': {
-                'VCCLCompilerTool': {
-                    'AdditionalOptions': ['/std:c++17', "/utf-8", "/D NOMINMAX", "/EHsc","/O3","/Zc:__cplusplus"],
+            'msbuild_settings': {
+                'ClCompile': {
+                    'AdditionalOptions': ['/std:c++17', "/utf-8", "/Zc:__cplusplus"],
+                    'PreprocessorDefinitions': ["NOMINMAX"],
+                    'ExceptionHandling': "Sync",
+                    'Optimization': "MaxSpeed"
                 },
+                'Link': {
+                    'LinkTimeCodeGeneration': 'UseLinkTimeCodeGeneration',  # /LTCG
+                },
+                'Lib': {
+                    'LinkTimeCodeGeneration': 'true',  # /LTCG
+                }
             },
             'xcode_settings': {
                 'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-                'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++',"-O3"],
+                'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++', "-O3"],
                 'OTHER_LDFLAGS': ['-stdlib=libc++'],
                 'MACOSX_DEPLOYMENT_TARGET': '10.14',
             },

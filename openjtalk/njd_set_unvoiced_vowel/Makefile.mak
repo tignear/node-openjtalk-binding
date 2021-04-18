@@ -1,7 +1,7 @@
 
 CC = cl
 
-CFLAGS = /O2 /Ob2 /Oi /Ot /Oy /GT /GL /TC /I ../njd /D CHARSET_UTF_8 /utf-8
+CFLAGS = /O2 /Ob2 /Oi /Ot /Oy /GT /GL /TC /MD /I ../njd /D CHARSET_UTF_8 /utf-8
 LFLAGS = /LTCG
 
 CORES = njd_set_unvoiced_vowel.obj
