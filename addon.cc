@@ -3,6 +3,7 @@
 #include <open_jtalk.h>
 #include <string>
 #include "options.cc"
+#include "thread_pool.hpp"
 
 /**compatibility of c++14**/
 #if __cplusplus >= 201703L
@@ -31,7 +32,45 @@ using DataType = variant<Wave, const char *>;
 void CallJs(Napi::Env env, Napi::Function callback, Context *context, DataType *data);
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 using FinalizerDataType = void;
+void taskFunc(TSFN tsfn, const std::string &dn_dict, void *voice_data, size_t length_of_voice_data, const std::string &text, const Options &options)
+{
+  Open_JTalk open_jtalk;
 
+  Open_JTalk_initialize(&open_jtalk);
+
+  int code = Open_JTalk_load(&open_jtalk, dn_dict.c_str(), voice_data, length_of_voice_data);
+  if (code)
+  {
+    switch (code)
+    {
+    case 1:
+      tsfn.BlockingCall(new DataType("Failed to load OpenJTalk.The dictionary is invalid."));
+      break;
+    case 2:
+      tsfn.BlockingCall(new DataType("Failed to load OpenJTalk.The htsvoice is invalid."));
+      break;
+    case 3:
+      tsfn.BlockingCall(new DataType("Failed to load OpenJTalk.The htsvoice is invalid(expected FULLCONTEXT_FORMAT to be HTS_TTS_JPN)."));
+    }
+    tsfn.Release();
+    return;
+  }
+  SetOptions(&open_jtalk, options);
+
+  signed short *pcm;
+  size_t length_of_pcm;
+  if (Open_JTalk_synthesis(&open_jtalk, text.c_str(), &pcm, &length_of_pcm) != TRUE)
+  {
+    Open_JTalk_clear(&open_jtalk);
+    tsfn.BlockingCall(new DataType("Synthesis failed."));
+    tsfn.Release();
+    return;
+  }
+
+  tsfn.BlockingCall(new DataType(Wave{
+      length_of_pcm, pcm, open_jtalk.engine.condition.sampling_frequency}));
+  tsfn.Release();
+}
 void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::string &dn_dict, void *&voice_data, size_t &length_of_voice_data, Options *options)
 {
   Napi::Env env = info.Env();
@@ -79,6 +118,7 @@ void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::strin
   length_of_voice_data = buff.ByteLength();
   ExtractOptions(options, js_options);
 }
+thread_pool pool(std::thread::hardware_concurrency() * 2);
 Napi::Value Synthesis(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
@@ -102,47 +142,7 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
         delete ctx;
       });
 
-  auto lambda = [tsfn, dn_dict, voice_data, length_of_voice_data, text, options]() mutable {
-    Open_JTalk open_jtalk;
-
-    Open_JTalk_initialize(&open_jtalk);
-
-    int code = Open_JTalk_load(&open_jtalk, dn_dict.c_str(), voice_data, length_of_voice_data);
-    if (code)
-    {
-      switch (code)
-      {
-      case 1:
-        tsfn.BlockingCall(new DataType("Failed to load OpenJTalk.The dictionary is invalid."));
-        break;
-      case 2:
-        tsfn.BlockingCall(new DataType("Failed to load OpenJTalk.The htsvoice is invalid."));
-        break;
-      case 3:
-        tsfn.BlockingCall(new DataType("Failed to load OpenJTalk.The htsvoice is invalid(expected FULLCONTEXT_FORMAT to be HTS_TTS_JPN)."));
-      }
-      tsfn.Release();
-      return;
-    }
-    SetOptions(&open_jtalk, &options);
-
-    signed short *pcm;
-    size_t length_of_pcm;
-    if (Open_JTalk_synthesis(&open_jtalk, text.c_str(), &pcm, &length_of_pcm) != TRUE)
-    {
-      Open_JTalk_clear(&open_jtalk);
-      tsfn.BlockingCall(new DataType("Synthesis failed."));
-      tsfn.Release();
-      return;
-    }
-
-    tsfn.BlockingCall(new DataType(Wave{
-        length_of_pcm, pcm, open_jtalk.engine.condition.sampling_frequency}));
-    tsfn.Release();
-  };
-
-  auto thread = std::thread(lambda);
-  thread.detach();
+  pool.submit(taskFunc, tsfn, dn_dict, voice_data, length_of_voice_data, text, options);
   return env.Undefined();
 }
 

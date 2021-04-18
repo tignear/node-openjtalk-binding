@@ -88,8 +88,8 @@ constexpr option_return option(
       CheckNullish(v, key);
     }
   };
-  auto set = [m, config_fn](Open_JTalk *open_jtalk, Options *opt) {
-    auto v = *opt.*m;
+  auto set = [m, config_fn](Open_JTalk *open_jtalk, const Options &opt) {
+    auto v = opt.*m;
     if (v)
     {
       config_fn(open_jtalk, *v);
@@ -132,7 +132,7 @@ void ExtractOptions(Options *options, Napi::Object &js_options)
 {
   OptionsLoop<0>(options, js_options);
 }
-void SetOptions(Open_JTalk *open_jtalk, Options *options)
+void SetOptions(Open_JTalk *open_jtalk,const Options &options)
 {
   OptionsLoop<1>(open_jtalk, options);
 }
