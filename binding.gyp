@@ -67,7 +67,15 @@
             ],
             "cflags_cc":[
                 "-fexceptions",
-            ]
+            ],
+            'xcode_settings': {
+                'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
+            },
+            'msbuild_settings': {
+                'ClCompile': {
+                    'ExceptionHandling': "Sync",
+                }
+            }
         }
     ]
 }
