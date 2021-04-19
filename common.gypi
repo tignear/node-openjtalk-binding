@@ -22,7 +22,6 @@
         'xcode_settings': {
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
             'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++', "-O3"],
-            'OTHER_LDFLAGS': ['-stdlib=libc++'],
             'MACOSX_DEPLOYMENT_TARGET': '10.14',
         },
         "cflags_cc": [
