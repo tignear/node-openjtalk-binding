@@ -24,8 +24,6 @@ jobs:
       with:
         fetch-depth: 0  
     - uses: actions/setup-node@v1
-    - if: ${{ matrix.os == 'macos-latest' }}
-      run: brew install automake
     - run: yarn
     - run: yarn test
     - run: yarn run node-gyp rebuild
