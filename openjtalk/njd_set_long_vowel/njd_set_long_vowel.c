@@ -42,12 +42,14 @@
 #define NJD_SET_LONG_VOWEL_C
 
 #ifdef __cplusplus
-#define NJD_SET_LONG_VOWEL_C_START extern "C" {
-#define NJD_SET_LONG_VOWEL_C_END   }
+#define NJD_SET_LONG_VOWEL_C_START \
+   extern "C"                      \
+   {
+#define NJD_SET_LONG_VOWEL_C_END }
 #else
 #define NJD_SET_LONG_VOWEL_C_START
 #define NJD_SET_LONG_VOWEL_C_END
-#endif                          /* __CPLUSPLUS */
+#endif /* __CPLUSPLUS */
 
 NJD_SET_LONG_VOWEL_C_START;
 
@@ -57,28 +59,7 @@ NJD_SET_LONG_VOWEL_C_START;
 
 #include "njd.h"
 #include "njd_set_long_vowel.h"
-
-#ifdef ASCII_HEADER
-#if defined(CHARSET_EUC_JP)
-#include "njd_set_long_vowel_rule_ascii_for_euc_jp.h"
-#elif defined(CHARSET_SHIFT_JIS)
-#include "njd_set_long_vowel_rule_ascii_for_shift_jis.h"
-#elif defined(CHARSET_UTF_8)
-#include "njd_set_long_vowel_rule_ascii_for_utf_8.h"
-#else
-#error CHARSET is not specified
-#endif
-#else
-#if defined(CHARSET_EUC_JP)
-#include "njd_set_long_vowel_rule_euc_jp.h"
-#elif defined(CHARSET_SHIFT_JIS)
-#include "njd_set_long_vowel_rule_shift_jis.h"
-#elif defined(CHARSET_UTF_8)
 #include "njd_set_long_vowel_rule_utf_8.h"
-#else
-#error CHARSET is not specified
-#endif
-#endif
 
 #define MAXBUFLEN 1024
 
@@ -86,7 +67,8 @@ static int strtopcmp(const char *str, const char *pattern)
 {
    int i;
 
-   for (i = 0;; i++) {
+   for (i = 0;; i++)
+   {
       if (pattern[i] == '\0')
          return i;
       if (str[i] == '\0')
@@ -96,13 +78,11 @@ static int strtopcmp(const char *str, const char *pattern)
    }
 }
 
-
-
-void njd_set_long_vowel(NJD * njd)
+void njd_set_long_vowel(NJD *njd)
 {
    return;
 }
 
 NJD_SET_LONG_VOWEL_C_END;
 
-#endif                          /* !NJD_SET_LONG_VOWEL_C */
+#endif /* !NJD_SET_LONG_VOWEL_C */

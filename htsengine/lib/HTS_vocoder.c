@@ -863,7 +863,7 @@ void HTS_Vocoder_initialize(HTS_Vocoder * v, size_t m, size_t stage, HTS_Boolean
 }
 
 /* HTS_Vocoder_synthesize: pulse/noise excitation and MLSA/MGLSA filster based waveform synthesis */
-void HTS_Vocoder_synthesize(HTS_Vocoder * v, size_t m, double lf0, double *spectrum, size_t nlpf, double *lpf, double alpha, double beta, double volume, double *rawdata, HTS_Audio * audio)
+void HTS_Vocoder_synthesize(HTS_Vocoder * v, size_t m, double lf0, double *spectrum, size_t nlpf, double *lpf, double alpha, double beta, double volume, double *rawdata)
 {
    double x;
    int i, j;
@@ -931,15 +931,6 @@ void HTS_Vocoder_synthesize(HTS_Vocoder * v, size_t m, double lf0, double *spect
       /* output */
       if (rawdata)
          rawdata[rawidx++] = x;
-      if (audio) {
-         if (x > 32767.0)
-            xs = 32767;
-         else if (x < -32768.0)
-            xs = -32768;
-         else
-            xs = (short) x;
-         HTS_Audio_write(audio, xs);
-      }
 
       for (i = 0; i <= m; i++)
          v->c[i] += v->cinc[i];

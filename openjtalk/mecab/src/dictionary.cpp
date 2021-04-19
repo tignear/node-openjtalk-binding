@@ -12,7 +12,6 @@
 #include "dictionary.h"
 #include "dictionary_rewriter.h"
 #include "feature_index.h"
-#include "iconv_utils.h"
 #include "mmap.h"
 #include "param.h"
 #include "scoped_ptr.h"
@@ -65,7 +64,7 @@ int progress_bar_darts(size_t current, size_t total) {
 }
 
 template <typename T1, typename T2>
-struct pair_1st_cmp: public std::binary_function<bool, T1, T2> {
+struct pair_1st_cmp{
   bool operator()(const std::pair<T1, T2> &x1,
                   const std::pair<T1, T2> &x2)  {
     return x1.first < x2.first;
@@ -161,11 +160,7 @@ bool Dictionary::assignUserDictionaryCosts(
 
   CHECK_DIE(!from.empty()) << "input dictionary charset is empty";
 
-  Iconv config_iconv;
-  CHECK_DIE(config_iconv.open(config_charset.c_str(), from.c_str()))
-      << "iconv_open() failed with from=" << config_charset << " to=" << from;
-
-  rewriter.open(rewrite_file.c_str(), &config_iconv);
+  rewriter.open(rewrite_file.c_str());
   CHECK_DIE(fi.open(param)) << "cannot open feature index";
 
   CHECK_DIE(property.open(param));
@@ -178,7 +173,7 @@ bool Dictionary::assignUserDictionaryCosts(
   }
 
   cid.open(left_id_file.c_str(),
-           right_id_file.c_str(), &config_iconv);
+           right_id_file.c_str());
   CHECK_DIE(cid.left_size()  == matrix.left_size() &&
             cid.right_size() == matrix.right_size())
       << "Context ID files("
@@ -280,14 +275,6 @@ bool Dictionary::compile(const Param &param,
   CHECK_DIE(!from.empty()) << "input dictionary charset is empty";
   CHECK_DIE(!to.empty())   << "output dictionary charset is empty";
 
-  Iconv iconv;
-  CHECK_DIE(iconv.open(from.c_str(), to.c_str()))
-      << "iconv_open() failed with from=" << from << " to=" << to;
-
-  Iconv config_iconv;
-  CHECK_DIE(config_iconv.open(config_charset.c_str(), from.c_str()))
-      << "iconv_open() failed with from=" << config_charset << " to=" << from;
-
   if (!node_format.empty()) {
     writer.reset(new Writer);
     lattice.reset(createLattice());
@@ -302,7 +289,7 @@ bool Dictionary::compile(const Param &param,
   }
 
   posid.reset(new POSIDGenerator);
-  posid->open(pos_id_file.c_str(), &config_iconv);
+  posid->open(pos_id_file.c_str());
 
   std::istringstream iss(UNK_DEF_DEFAULT);
 
@@ -355,7 +342,7 @@ bool Dictionary::compile(const Param &param,
             << "cost field should not be empty in sys/unk dic.";
         if (!rewrite.get()) {
           rewrite.reset(new DictionaryRewriter);
-          rewrite->open(rewrite_file.c_str(), &config_iconv);
+          rewrite->open(rewrite_file.c_str());
           fi.reset(new DecoderFeatureIndex);
           CHECK_DIE(fi->open(param)) << "cannot open feature index";
           property.reset(new CharProperty);
@@ -369,7 +356,7 @@ bool Dictionary::compile(const Param &param,
       if (lid < 0  || rid < 0 || lid == INT_MAX || rid == INT_MAX) {
         if (!rewrite.get()) {
           rewrite.reset(new DictionaryRewriter);
-          rewrite->open(rewrite_file.c_str(), &config_iconv);
+          rewrite->open(rewrite_file.c_str());
         }
 
         std::string ufeature, lfeature, rfeature;
@@ -379,7 +366,7 @@ bool Dictionary::compile(const Param &param,
         if (!cid.get()) {
           cid.reset(new ContextID);
           cid->open(left_id_file.c_str(),
-                    right_id_file.c_str(), &config_iconv);
+                    right_id_file.c_str());
           CHECK_DIE(cid->left_size()  == matrix.left_size() &&
                     cid->right_size() == matrix.right_size())
               << "Context ID files("
@@ -397,18 +384,6 @@ bool Dictionary::compile(const Param &param,
 
       if (w.empty()) {
         std::cerr << "empty word is found, discard this line" << std::endl;
-        continue;
-      }
-
-      if (!iconv.convert(&feature)) {
-        std::cerr << "iconv conversion failed. skip this entry"
-                  << std::endl;
-        continue;
-      }
-
-      if (type != MECAB_UNK_DIC && !iconv.convert(&w)) {
-        std::cerr << "iconv conversion failed. skip this entry"
-                  << std::endl;
         continue;
       }
 

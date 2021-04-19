@@ -57,7 +57,6 @@ NJD_SET_DIGIT_C_START;
 
 #include "njd.h"
 #include "njd_set_digit.h"
-#define CHARSET_UTF_8 1
 
 #include "njd_set_digit_rule_utf_8.h"
 

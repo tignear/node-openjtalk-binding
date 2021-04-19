@@ -33,7 +33,7 @@ struct Options
 #include <array>
 #include <functional>
 
-#define option_return std::tuple<std::function<void(Options *options, Napi::Object &js_options)>, std::function<void(Open_JTalk *open_jtalk, Options *opt)>>
+#define option_return std::tuple<std::function<void(Options &options, Napi::Object &js_options)>, std::function<void(Open_JTalk *open_jtalk,const Options &opt)>>
 
 template <size_t N>
 using option_list = std::array<option_return, N>;

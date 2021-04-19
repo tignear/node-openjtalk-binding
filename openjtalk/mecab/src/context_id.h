@@ -13,7 +13,6 @@
 namespace MeCab {
 
 class Param;
-class Iconv;
 
 class ContextID {
  private:
@@ -30,8 +29,7 @@ class ContextID {
             const char* rfile);
   bool build();
   bool open(const char *lfile,
-            const char *rfile,
-            Iconv *iconv = 0);
+            const char *rfile);
   int  lid(const char *l) const;
   int  rid(const char *r) const;
 

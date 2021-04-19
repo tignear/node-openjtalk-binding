@@ -94,8 +94,6 @@ void HTS_Engine_initialize(HTS_Engine *engine)
    engine->condition.parameter_iw = NULL;
    engine->condition.gv_iw = NULL;
 
-   /* initialize audio */
-   HTS_Audio_initialize(&engine->audio);
    /* initialize model set */
    HTS_ModelSet_initialize(&engine->ms);
    /* initialize label list */
@@ -178,7 +176,6 @@ void HTS_Engine_set_sampling_frequency(HTS_Engine *engine, size_t i)
    if (i < 1)
       i = 1;
    engine->condition.sampling_frequency = i;
-   HTS_Audio_set_parameter(&engine->audio, engine->condition.sampling_frequency, engine->condition.audio_buff_size);
 }
 
 /* HTS_Engine_get_sampling_frequency: get sampling frequency */
@@ -205,7 +202,6 @@ size_t HTS_Engine_get_fperiod(HTS_Engine *engine)
 void HTS_Engine_set_audio_buff_size(HTS_Engine *engine, size_t i)
 {
    engine->condition.audio_buff_size = i;
-   HTS_Audio_set_parameter(&engine->audio, engine->condition.sampling_frequency, engine->condition.audio_buff_size);
 }
 
 /* HTS_Engine_get_audio_buff_size: get audio buffer size */
@@ -494,7 +490,7 @@ HTS_Boolean HTS_Engine_generate_parameter_sequence(HTS_Engine *engine)
 /* HTS_Engine_generate_sample_sequence: generate sample sequence (3rd synthesis step) */
 HTS_Boolean HTS_Engine_generate_sample_sequence(HTS_Engine *engine)
 {
-   return HTS_GStreamSet_create(&engine->gss, &engine->pss, engine->condition.stage, engine->condition.use_log_gain, engine->condition.sampling_frequency, engine->condition.fperiod, engine->condition.alpha, engine->condition.beta, &engine->condition.stop, engine->condition.volume, engine->condition.audio_buff_size > 0 ? &engine->audio : NULL);
+   return HTS_GStreamSet_create(&engine->gss, &engine->pss, engine->condition.stage, engine->condition.use_log_gain, engine->condition.sampling_frequency, engine->condition.fperiod, engine->condition.alpha, engine->condition.beta, &engine->condition.stop, engine->condition.volume);
 }
 
 /* HTS_Engine_synthesize: synthesize speech */
@@ -627,9 +623,9 @@ void HTS_Engine_save_information(HTS_Engine *engine, FILE *fp)
    /* generated sequence */
    fprintf(fp, "[Generated sequence]\n");
    fprintf(fp, "Number of HMMs                         -> %8lu\n", (unsigned long)HTS_Label_get_size(label));
-   fprintf(fp, "Number of stats                        -> %8lu\n", (unsigned long)HTS_Label_get_size(label) * HTS_ModelSet_get_nstate(ms));
+   fprintf(fp, "Number of stats                        -> %8lu\n", (unsigned long)(HTS_Label_get_size(label) * HTS_ModelSet_get_nstate(ms)));
    fprintf(fp, "Length of this speech                  -> %8.3f(sec)\n", (float)((double)HTS_PStreamSet_get_total_frame(pss) * condition->fperiod / condition->sampling_frequency));
-   fprintf(fp, "                                       -> %8lu(frames)\n", (unsigned long)HTS_PStreamSet_get_total_frame(pss) * condition->fperiod);
+   fprintf(fp, "                                       -> %8lu(frames)\n", (unsigned long)(HTS_PStreamSet_get_total_frame(pss) * condition->fperiod));
 
    for (i = 0; i < HTS_Label_get_size(label); i++)
    {
@@ -845,7 +841,6 @@ void HTS_Engine_clear(HTS_Engine *engine)
    }
 
    HTS_ModelSet_clear(&engine->ms);
-   HTS_Audio_clear(&engine->audio);
    HTS_Engine_initialize(engine);
 }
 

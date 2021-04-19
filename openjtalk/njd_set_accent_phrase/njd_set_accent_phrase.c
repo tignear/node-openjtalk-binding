@@ -56,28 +56,8 @@ NJD_SET_ACCENT_PHRASE_C_START;
 
 #include "njd.h"
 #include "njd_set_accent_phrase.h"
-
-#ifdef ASCII_HEADER
-#if defined(CHARSET_EUC_JP)
-#include "njd_set_accent_phrase_rule_ascii_for_euc_jp.h"
-#elif defined(CHARSET_SHIFT_JIS)
-#include "njd_set_accent_phrase_rule_ascii_for_shift_jis.h"
-#elif defined(CHARSET_UTF_8)
-#include "njd_set_accent_phrase_rule_ascii_for_utf_8.h"
-#else
-#error CHARSET is not specified
-#endif
-#else
-#if defined(CHARSET_EUC_JP)
-#include "njd_set_accent_phrase_rule_euc_jp.h"
-#elif defined(CHARSET_SHIFT_JIS)
-#include "njd_set_accent_phrase_rule_shift_jis.h"
-#elif defined(CHARSET_UTF_8)
 #include "njd_set_accent_phrase_rule_utf_8.h"
-#else
-#error CHARSET is not specified
-#endif
-#endif
+
 
 static int strtopcmp(const char *str, const char *pattern)
 {

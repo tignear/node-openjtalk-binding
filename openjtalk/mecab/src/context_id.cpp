@@ -5,7 +5,6 @@
 //  Copyright(C) 2004-2006 Nippon Telegraph and Telephone Corporation
 #include <fstream>
 #include "context_id.h"
-#include "iconv_utils.h"
 #include "utils.h"
 
 namespace {
@@ -13,8 +12,7 @@ namespace {
 using namespace MeCab;
 
 bool open_map(const char *filename,
-              std::map<std::string, int> *cmap,
-              Iconv *iconv) {
+              std::map<std::string, int> *cmap) {
   std::ifstream ifs(WPATH(filename));
   CHECK_DIE(ifs) << "no such file or directory: " << filename;
   cmap->clear();
@@ -25,9 +23,6 @@ bool open_map(const char *filename,
                              " \t", col, 2))
         << "format error: " << line;
     std::string pos = col[1];
-    if (iconv) {
-      iconv->convert(&pos);
-    }
     cmap->insert(std::pair<std::string, int>
                  (pos, std::atoi(col[0])));
   }
@@ -81,10 +76,9 @@ bool ContextID::save(const char* lfile,
 }
 
 bool ContextID::open(const char *lfile,
-                     const char *rfile,
-                     Iconv *iconv) {
-  return (::open_map(lfile, &left_, iconv) &&
-          ::open_map(rfile, &right_, iconv));
+                     const char *rfile) {
+  return (::open_map(lfile, &left_) &&
+          ::open_map(rfile, &right_));
 }
 
 bool ContextID::build() {

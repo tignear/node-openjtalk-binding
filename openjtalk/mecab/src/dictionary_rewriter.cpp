@@ -11,7 +11,6 @@
 #include <vector>
 #include "common.h"
 #include "dictionary_rewriter.h"
-#include "iconv_utils.h"
 #include "scoped_ptr.h"
 #include "utils.h"
 
@@ -130,14 +129,12 @@ bool RewriteRules::rewrite(size_t size,
 
 void DictionaryRewriter::clear() { cache_.clear(); }
 
-bool DictionaryRewriter::open(const char *filename,
-                              Iconv *iconv) {
+bool DictionaryRewriter::open(const char *filename) {
   std::ifstream ifs(WPATH(filename));
   CHECK_DIE(ifs) << "no such file or directory: " << filename;
   int append_to = 0;
   std::string line;
   while (std::getline(ifs, line)) {
-    if (iconv) iconv->convert(&line);
     if (line.empty() || line[0] == '#') continue;
     if (line == "[unigram rewrite]") {
       append_to = 1;
@@ -199,8 +196,7 @@ bool DictionaryRewriter::rewrite2(const std::string &feature,
   return true;
 }
 
-bool POSIDGenerator::open(const char *filename,
-                          Iconv *iconv) {
+bool POSIDGenerator::open(const char *filename) {
   std::ifstream ifs(WPATH(filename));
   if (!ifs) {
     std::cerr << filename
@@ -213,7 +209,6 @@ bool POSIDGenerator::open(const char *filename,
   std::string line;
   char *col[2];
   while (std::getline(ifs, line)) {
-    if (iconv) iconv->convert(&line);
     const size_t n = tokenize2(const_cast<char *>(line.c_str()),
                                " \t", col, 2);
     CHECK_DIE(n == 2) << "format error: " << line;

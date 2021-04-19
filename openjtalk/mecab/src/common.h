@@ -66,9 +66,7 @@
 #endif
 */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+
 
 /* for Open JTalk
 #if defined(_MSC_VER) || defined(__CYGWIN__)

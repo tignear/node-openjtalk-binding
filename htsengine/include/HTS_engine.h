@@ -79,19 +79,6 @@ typedef char HTS_Boolean;
 
 #define HTS_COPYRIGHT "The HMM-Based Speech Synthesis Engine \"hts_engine API\"\nVersion 1.10 (http://hts-engine.sourceforge.net/)\nCopyright (C) 2001-2015 Nagoya Institute of Technology\n              2001-2008 Tokyo Institute of Technology\nAll rights reserved.\n"
 
-/* audio ----------------------------------------------------------- */
-
-/* HTS_Audio: audio output wrapper */
-typedef struct _HTS_Audio
-{
-   size_t sampling_frequency; /* sampling frequency */
-   size_t max_buff_size;      /* buffer size for audio output interface */
-   short *buff;               /* current buffer */
-   size_t buff_size;          /* current buffer size */
-   void *audio_interface;     /* audio interface specified in compile step */
-} HTS_Audio;
-
-/* model ----------------------------------------------------------- */
 
 /* HTS_Window: window coefficients to calculate dynamic features. */
 typedef struct _HTS_Window
@@ -314,7 +301,6 @@ typedef struct _HTS_Condition
 typedef struct _HTS_Engine
 {
    HTS_Condition condition; /* synthesis condition */
-   HTS_Audio audio;         /* audio output */
    HTS_ModelSet ms;         /* set of duration models, HMMs and GV models */
    HTS_Label label;         /* label */
    HTS_SStreamSet sss;      /* set of state streams */

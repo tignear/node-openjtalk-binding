@@ -279,7 +279,7 @@ class CRFLearner {
 
 class Learner {
  public:
-  static bool run(int argc, char **argv) {
+  static int run(int argc, char **argv) {
     static const MeCab::Option long_options[] = {
       { "dicdir",   'd',  ".",     "DIR",
         "set DIR as dicdir(default \".\" )" },

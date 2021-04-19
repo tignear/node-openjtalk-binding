@@ -1,76 +1,45 @@
 {
+    'includes': ["common.gypi"],
     'variables': {
-    },
-    'target_defaults': {
-        'msbuild_settings': {
-            'ClCompile': {
-                'AdditionalOptions': ['/std:c++17', "/utf-8", "/Zc:__cplusplus"],
-                'PreprocessorDefinitions': ["NOMINMAX"],
-                'ExceptionHandling': "Sync",
-                'Optimization': "MaxSpeed"
-            },
-            'Link': {
-                'LinkTimeCodeGeneration': 'UseLinkTimeCodeGeneration',  # /LTCG
-            },
-            'Lib': {
-                'LinkTimeCodeGeneration': 'true',  # /LTCG
-            }
-        },
-        'xcode_settings': {
-            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
-            'OTHER_CPLUSPLUSFLAGS': ['-std=c++17', '-stdlib=libc++', "-O3"],
-            'OTHER_LDFLAGS': ['-stdlib=libc++'],
-            'MACOSX_DEPLOYMENT_TARGET': '10.14',
-        },
+        "conditions": [
+            ['OS == "win"', {
+                "STATIC_LIB_SUFFIX%": ".lib",
+                "STATIC_LIB_PREFIX%": "",
+            }],
+            ['OS != "win"', {
+                "STATIC_LIB_SUFFIX%": ".a",
+                "STATIC_LIB_PREFIX%": "lib",
+            }]
+        ]
     },
     'targets': [
-        {
-            'target_name': 'htsengine',
-            'type': 'none',
-            "conditions": [['OS == "win"', {"actions": [
-                {
-                    "action_name": "htsengine",
-                    "inputs": ["./htsengine/Makefile.mak"],
-                    "outputs": ["./htsengine/lib/hts_engine_API.lib"],
-                    'action': ["cmd", "/C", "tools/htsengine.cmd"]
-                }]}],  # OS == "win"
-                ['OS != "win"', {"actions": [
-                    {
-                        "action_name": "make",
-                        "inputs": ["./htsengine/Makefile.am"],
-                        "outputs": ["./htsengine/lib/*.o", "./htsengine/lib/*.a"],
-                        'action':["sh", "tools/htsengine.sh"]
-                    }
-                ]}]],  # OS != "win"
-        },
         {
             'target_name': 'openjtalk',
             'type': 'none',
             'dependencies': [
-                'htsengine',
-            ],
-            "conditions": [['OS == "win"', {"actions": [
-                {
-                    "action_name": "openjtalk",
-                    "inputs": ["./openjtalk/Makefile.mak"],
-                    "outputs": ["./openjtalk/static-lib/open_jtalk.lib"],
-                    'action': ["cmd", "/Q" "/C", "./tools/openjtalk.cmd"]
-                }]}],  # OS == "win"
-                ['OS != "win"', {"actions": [
-                    {
-                        "action_name": "make",
-                        "inputs": ["./openjtalk/Makefile.am"],
-                        "outputs": ["./openjtalk/static-lib/libOpenJTalk.a"],
-                        'action':["sh", "tools/openjtalk.sh"]
-                    }
-                ]}]],  # OS != "win"
+                "openjtalk/jpcommon/build.gyp:*",
+                "openjtalk/mecab/build.gyp:mecab",
+                "openjtalk/mecab2njd/build.gyp:*",
+                "openjtalk/njd/build.gyp:*",
+                "openjtalk/njd_set_accent_phrase/build.gyp:*",
+                "openjtalk/njd_set_accent_type/build.gyp:*",
+                "openjtalk/njd_set_digit/build.gyp:*",
+                "openjtalk/njd_set_long_vowel/build.gyp:*",
+                "openjtalk/njd_set_pronunciation/build.gyp:*",
+                "openjtalk/njd_set_unvoiced_vowel/build.gyp:*",
+                "openjtalk/njd2jpcommon/build.gyp:*",
+                "openjtalk/njd_set_unvoiced_vowel/build.gyp:*",
+                "openjtalk/text2mecab/build.gyp:*",
+                "openjtalk/open_jtalk/build.gyp:*",
+                "openjtalk/mecab-naist-jdic/build.gyp:*",
+            ]
         },
         {
             "target_name": "addon",
             "sources": ["addon.cc"],
             "include_dirs": [
                 "<!@(node -p \"require('node-addon-api').include\")",
-                "./openjtalk/static-lib",
+                "./openjtalk/open_jtalk",
                 "./openjtalk/mecab/src",
                 "./openjtalk/njd",
                 "./openjtalk/jpcommon",
@@ -78,46 +47,27 @@
             ],
             "defines": ["NAPI_CPP_EXCEPTIONS"],
             'dependencies': [
-                'openjtalk',
+                'openjtalk', "htsengine/build.gyp:*"
+            ],
+            "libraries": [
+                "<(PRODUCT_DIR)/open_jtalk<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/mecab<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/jpcommon<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/htsengine<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/text2mecab<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/mecab2njd<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd_set_pronunciation<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd_set_digit<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd_set_accent_phrase<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd_set_accent_type<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd_set_unvoiced_vowel<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd_set_long_vowel<(STATIC_LIB_SUFFIX)",
+                "<(PRODUCT_DIR)/njd2jpcommon<(STATIC_LIB_SUFFIX)"
             ],
             "cflags_cc":[
-                "-std=c++17",
                 "-fexceptions",
-                "-fPIC",
-                "-O3"
-            ],
-            "conditions": [['OS == "win"', {"libraries": [
-                "<(module_root_dir)/openjtalk/static-lib/open_jtalk.lib",
-                "<(module_root_dir)/openjtalk/mecab/src/mecab.lib",
-                "<(module_root_dir)/openjtalk/njd/njd.lib",
-                "<(module_root_dir)/openjtalk/jpcommon/jpcommon.lib",
-                "<(module_root_dir)/htsengine/lib/hts_engine_API.lib",
-                "<(module_root_dir)/openjtalk/text2mecab/text2mecab.lib",
-                "<(module_root_dir)/openjtalk/mecab2njd/mecab2njd.lib",
-                "<(module_root_dir)/openjtalk/njd_set_pronunciation/njd_set_pronunciation.lib",
-                "<(module_root_dir)/openjtalk/njd_set_digit/njd_set_digit.lib",
-                "<(module_root_dir)/openjtalk/njd_set_accent_phrase/njd_set_accent_phrase.lib",
-                "<(module_root_dir)/openjtalk/njd_set_accent_type/njd_set_accent_type.lib",
-                "<(module_root_dir)/openjtalk/njd_set_unvoiced_vowel/njd_set_unvoiced_vowel.lib",
-                "<(module_root_dir)/openjtalk/njd_set_long_vowel/njd_set_long_vowel.lib",
-                "<(module_root_dir)/openjtalk/njd2jpcommon/njd2jpcommon.lib"
-            ]}],  # OS == "win"
-                ['OS != "win"', {"libraries": [
-                    "<(module_root_dir)/openjtalk/static-lib/libOpenJTalk.a",
-                    "<(module_root_dir)/openjtalk/mecab/src/libmecab.a",
-                    "<(module_root_dir)/openjtalk/njd/libnjd.a",
-                    "<(module_root_dir)/openjtalk/jpcommon/libjpcommon.a",
-                    "<(module_root_dir)/htsengine/lib/libHTSEngine.a",
-                    "<(module_root_dir)/openjtalk/text2mecab/libtext2mecab.a",
-                    "<(module_root_dir)/openjtalk/mecab2njd/libmecab2njd.a",
-                    "<(module_root_dir)/openjtalk/njd_set_pronunciation/libnjd_set_pronunciation.a",
-                    "<(module_root_dir)/openjtalk/njd_set_digit/libnjd_set_digit.a",
-                    "<(module_root_dir)/openjtalk/njd_set_accent_phrase/libnjd_set_accent_phrase.a",
-                    "<(module_root_dir)/openjtalk/njd_set_accent_type/libnjd_set_accent_type.a",
-                    "<(module_root_dir)/openjtalk/njd_set_unvoiced_vowel/libnjd_set_unvoiced_vowel.a",
-                    "<(module_root_dir)/openjtalk/njd_set_long_vowel/libnjd_set_long_vowel.a",
-                    "<(module_root_dir)/openjtalk/njd2jpcommon/libnjd2jpcommon.a"
-                ]}]],
+            ]
         }
     ]
 }

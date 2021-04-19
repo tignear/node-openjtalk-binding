@@ -10,7 +10,6 @@
 #include "common.h"
 #include "feature_index.h"
 #include "param.h"
-#include "iconv_utils.h"
 #include "learner_node.h"
 #include "scoped_ptr.h"
 #include "string_buffer.h"
@@ -572,16 +571,11 @@ bool FeatureIndex::convert(const Param &param,
     to = from;
   }
 
-  Iconv iconv;
-  CHECK_DIE(iconv.open(from.c_str(), to.c_str()))
-            << "cannot create model from=" << from
-            << " to=" << to;
 
   while (ifs.getline(buf.get(), buf.size())) {
     CHECK_DIE(tokenize2(buf.get(), "\t", column, 2) == 2)
         << "format error: " << buf.get();
     std::string feature = column[1];
-    CHECK_DIE(iconv.convert(&feature));
     const uint64_t fp = fingerprint(feature);
     const double alpha = atof(column[0]);
     dic.push_back(std::pair<uint64_t, double>(fp, alpha));
@@ -644,10 +638,7 @@ bool EncoderFeatureIndex::reopen(const char *filename,
   CHECK_DIE(dic_charset);
   CHECK_DIE(!model_charset.empty()) << "charset is empty";
 
-  Iconv iconv;
-  CHECK_DIE(iconv.open(model_charset.c_str(), dic_charset))
-      << "cannot create model from=" << model_charset
-      << " to=" << dic_charset;
+
 
   alpha->clear();
   CHECK_DIE(maxid_ == 0);
@@ -657,7 +648,6 @@ bool EncoderFeatureIndex::reopen(const char *filename,
     CHECK_DIE(tokenize2(buf.get(), "\t", column, 2) == 2)
         << "format error: " << buf.get();
     std::string feature = column[1];
-    CHECK_DIE(iconv.convert(&feature));
     dic_.insert(std::make_pair(feature, maxid_++));
     alpha->push_back(atof(column[0]));
   }

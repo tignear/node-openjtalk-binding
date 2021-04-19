@@ -149,22 +149,6 @@ void HTS_free(void *p);
 /* HTS_error: output error message */
 void HTS_error(int error, const char *message, ...);
 
-/* audio ----------------------------------------------------------- */
-
-/* HTS_Audio_initialize: initialize audio */
-void HTS_Audio_initialize(HTS_Audio * audio);
-
-/* HTS_Audio_set_parameter: set parameters for audio */
-void HTS_Audio_set_parameter(HTS_Audio * audio, size_t sampling_frequency, size_t max_buff_size);
-
-/* HTS_Audio_write: send data to audio */
-void HTS_Audio_write(HTS_Audio * audio, short data);
-
-/* HTS_Audio_flush: flush remain data */
-void HTS_Audio_flush(HTS_Audio * audio);
-
-/* HTS_Audio_clear: free audio */
-void HTS_Audio_clear(HTS_Audio * audio);
 
 /* model ----------------------------------------------------------- */
 
@@ -397,7 +381,7 @@ void HTS_PStreamSet_clear(HTS_PStreamSet * pss);
 void HTS_GStreamSet_initialize(HTS_GStreamSet * gss);
 
 /* HTS_GStreamSet_create: generate speech */
-HTS_Boolean HTS_GStreamSet_create(HTS_GStreamSet * gss, HTS_PStreamSet * pss, size_t stage, HTS_Boolean use_log_gain, size_t sampling_rate, size_t fperiod, double alpha, double beta, HTS_Boolean * stop, double volume, HTS_Audio * audio);
+HTS_Boolean HTS_GStreamSet_create(HTS_GStreamSet * gss, HTS_PStreamSet * pss, size_t stage, HTS_Boolean use_log_gain, size_t sampling_rate, size_t fperiod, double alpha, double beta, HTS_Boolean * stop, double volume);
 
 /* HTS_GStreamSet_get_total_frame: get total number of frame */
 size_t HTS_GStreamSet_get_total_frame(HTS_GStreamSet * gss);
@@ -494,7 +478,7 @@ typedef struct _HTS_Vocoder {
 void HTS_Vocoder_initialize(HTS_Vocoder * v, size_t m, size_t stage, HTS_Boolean use_log_gain, size_t rate, size_t fperiod);
 
 /* HTS_Vocoder_synthesize: pulse/noise excitation and MLSA/MGLSA filster based waveform synthesis */
-void HTS_Vocoder_synthesize(HTS_Vocoder * v, size_t m, double lf0, double *spectrum, size_t nlpf, double *lpf, double alpha, double beta, double volume, double *rawdata, HTS_Audio * audio);
+void HTS_Vocoder_synthesize(HTS_Vocoder * v, size_t m, double lf0, double *spectrum, size_t nlpf, double *lpf, double alpha, double beta, double volume, double *rawdata);
 
 /* HTS_Vocoder_clear: clear vocoder */
 void HTS_Vocoder_clear(HTS_Vocoder * v);

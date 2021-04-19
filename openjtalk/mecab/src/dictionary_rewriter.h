@@ -15,7 +15,6 @@
 
 namespace MeCab {
 
-class Iconv;
 
 class RewritePattern {
  private:
@@ -48,8 +47,7 @@ class DictionaryRewriter {
   std::map<std::string, FeatureSet> cache_;
 
  public:
-  bool open(const char *filename,
-            Iconv *iconv = 0);
+  bool open(const char *filename);
   void clear();
   bool rewrite(const std::string &feature,
                std::string *ufeature,
@@ -66,8 +64,7 @@ class POSIDGenerator {
  private:
   RewriteRules rewrite_;
  public:
-  bool open(const char *filename,
-            Iconv *iconv = 0);
+  bool open(const char *filename);
   void clear() { rewrite_.clear(); }
   int id(const char *key) const;
 };

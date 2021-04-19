@@ -4,7 +4,7 @@
 #include <open_jtalk.h>
 #include <string>
 #include "options.cc"
-#include "thread_pool.hpp"
+#include "thread_pool/ThreadPool.h"
 
 /**compatibility of c++14**/
 #if __cplusplus >= 201703L
@@ -155,7 +155,7 @@ void LoadArguments(const Napi::CallbackInfo &info, std::string &text, std::strin
 
   ExtractOptions(options, js_options);
 }
-thread_pool pool(std::thread::hardware_concurrency() * 2);
+ThreadPool pool(std::thread::hardware_concurrency() * 2);
 Napi::Value Synthesis(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
@@ -184,7 +184,7 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
       env,
       "Release htsvoice ArrayBuffer",
       1, 1, nullptr);
-  pool.submit(taskFunc, tsfn, rtsfn, voice_array_buff_ref, std::move(dn_dict), voice_data, length_of_voice_data, std::move(text), std::move(options));
+  pool.AddTask(taskFunc, tsfn, rtsfn, voice_array_buff_ref, std::move(dn_dict), voice_data, length_of_voice_data, std::move(text), std::move(options));
   return env.Undefined();
 }
 
