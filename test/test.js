@@ -1,4 +1,4 @@
-const { synthesis, dictionary_dir } = require("../addon");
+const { synthesis } = require("../addon");
 const path = require("path");
 const { promises: fs, readFileSync } = require("fs");
 const path_to_htsvoice = path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice");

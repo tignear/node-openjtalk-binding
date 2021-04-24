@@ -1,4 +1,4 @@
-#include "open_jtalk.h"
+#include "open_jtalk.hpp"
 /* Sub headers */
 #include "text2mecab.h"
 #include "mecab2njd.h"
@@ -13,7 +13,7 @@
 
 void Open_JTalk_initialize(Open_JTalk *open_jtalk)
 {
-  Mecab_initialize(&open_jtalk->mecab);
+  MeCab::Mecab_initialize(&open_jtalk->mecab);
   NJD_initialize(&open_jtalk->njd);
   JPCommon_initialize(&open_jtalk->jpcommon);
   HTS_Engine_initialize(&open_jtalk->engine);
@@ -21,15 +21,15 @@ void Open_JTalk_initialize(Open_JTalk *open_jtalk)
 
 void Open_JTalk_clear(Open_JTalk *open_jtalk)
 {
-  Mecab_clear(&open_jtalk->mecab);
+  MeCab::Mecab_clear(&open_jtalk->mecab);
   NJD_clear(&open_jtalk->njd);
   JPCommon_clear(&open_jtalk->jpcommon);
   HTS_Engine_clear(&open_jtalk->engine);
 }
 
-int Open_JTalk_load(Open_JTalk *open_jtalk, const char *dn_mecab, void *voice_data, size_t length_of_voice_data)
+int Open_JTalk_load(Open_JTalk *open_jtalk, const char *dn_mecab, void *voice_data, size_t length_of_voice_data, const MeCab::TokenizerOpenFromMemoryOptions &tokenizer_options)
 {
-  if (Mecab_load(&open_jtalk->mecab, dn_mecab) != TRUE)
+  if (MeCab::Mecab_load(&open_jtalk->mecab, dn_mecab, tokenizer_options) != TRUE)
   {
     Open_JTalk_clear(open_jtalk);
     return 1;
@@ -100,12 +100,12 @@ void Open_JTalk_set_audio_buff_size(Open_JTalk *open_jtalk, size_t i)
 int Open_JTalk_synthesis(Open_JTalk *open_jtalk, const char *txt, signed short **pcm, size_t *length_of_pcm)
 {
   int result = 0;
-  char *buff = malloc(strlen(txt) * 4 + 1);
+  char *buff = (char *)malloc(strlen(txt) * 4 + 1);
 
   text2mecab(buff, txt);
-  Mecab_analysis(&open_jtalk->mecab, buff);
-  mecab2njd(&open_jtalk->njd, Mecab_get_feature(&open_jtalk->mecab),
-            Mecab_get_size(&open_jtalk->mecab));
+  MeCab::Mecab_analysis(&open_jtalk->mecab, buff);
+  mecab2njd(&open_jtalk->njd, MeCab::Mecab_get_feature(&open_jtalk->mecab),
+            MeCab::Mecab_get_size(&open_jtalk->mecab));
   njd_set_pronunciation(&open_jtalk->njd);
   njd_set_digit(&open_jtalk->njd);
   njd_set_accent_phrase(&open_jtalk->njd);
@@ -124,7 +124,7 @@ int Open_JTalk_synthesis(Open_JTalk *open_jtalk, const char *txt, signed short *
   }
   JPCommon_refresh(&open_jtalk->jpcommon);
   NJD_refresh(&open_jtalk->njd);
-  Mecab_refresh(&open_jtalk->mecab);
+  MeCab::Mecab_refresh(&open_jtalk->mecab);
   free(buff);
 
   return result;

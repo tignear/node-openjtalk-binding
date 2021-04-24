@@ -5,8 +5,28 @@
 
 const { synthesis: _synthesis } = require("bindings")("addon");
 const path = require("path");
-const dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+const path_to_dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+
 const { promises: fs } = require("fs");
+async function loadDictionary(path_to_dictionary) {
+  const [unkdic,sysdic,property] = (await Promise.all(
+    [
+      fs.readFile(path.resolve(path_to_dictionary, "unk.dic")),
+      fs.readFile(path.resolve(path_to_dictionary, "sys.dic")),
+      fs.readFile(path.resolve(path_to_dictionary, "char.bin"))
+    ]
+  )).map(e=>e.buffer);
+
+  return {
+    dir: path_to_dictionary,
+    unkdic,
+    sysdic,
+    property
+  };
+
+}
+const default_dictionary = loadDictionary(path_to_dictionary);
+
 /**
  * @typedef {Object} OpenJTalkOptions
  * @property {!string|Uint8Array|ArrayBuffer} htsvoice Path to htsvoice. Or data ArrayBuffer,Buffer.
@@ -48,6 +68,12 @@ exports.synthesis = async function synthesis(text, options) {
   if (htsvoice instanceof Uint8Array) {
     htsvoice = htsvoice.buffer;
   }
+  let dictionary = options.dictionary;
+  if (!dictionary) {
+    dictionary = await default_dictionary;
+  } else if (typeof dictionary == "string") {
+    dictionary = await loadDictionary(dictionary);
+  }
   return new Promise((resolve, reject) => {
     function cb(err, /** @type {Buffer} */ buffer, /** @type {number} */ sampleRate) {
       if (err) {
@@ -78,4 +104,4 @@ exports.synthesis = async function synthesis(text, options) {
  * Path to builded dictionary.
  * @type {string} 
  * */
-exports.dictionary_dir = dictionary;
+exports.dictionary_dir = path_to_dictionary;

@@ -9,45 +9,44 @@
 #include <vector>
 #include "mecab.h"
 #include "thread.h"
+#include "tokenizer.h"
+namespace MeCab
+{
 
-namespace MeCab {
+  class Viterbi
+  {
+  public:
+    bool open(const Param &param);
+    bool open(const Param &param, const TokenizerOpenFromMemoryOptions &tokenizer_options);
 
-class Lattice;
-class Param;
-class Connector;
-template <typename N, typename P> class Tokenizer;
+    bool analyze(Lattice *lattice) const;
 
-class Viterbi {
- public:
-  bool open(const Param &param);
+    const Tokenizer<Node, Path> *tokenizer() const;
 
-  bool analyze(Lattice *lattice) const;
+    const Connector *connector() const;
 
-  const Tokenizer<Node, Path> *tokenizer() const;
+    const char *what() { return what_.str(); }
 
-  const Connector *connector() const;
+    static bool buildResultForNBest(Lattice *lattice);
 
-  const char *what() { return what_.str(); }
+    Viterbi();
+    virtual ~Viterbi();
 
-  static bool buildResultForNBest(Lattice *lattice);
+  private:
+    template <bool IsAllPath, bool IsPartial>
+    bool viterbi(Lattice *lattice) const;
 
-  Viterbi();
-  virtual ~Viterbi();
+    static bool forwardbackward(Lattice *lattice);
+    static bool initPartial(Lattice *lattice);
+    static bool initNBest(Lattice *lattice);
+    static bool buildBestLattice(Lattice *lattice);
+    static bool buildAllLattice(Lattice *lattice);
+    static bool buildAlternative(Lattice *lattice);
 
- private:
-  template <bool IsAllPath, bool IsPartial> bool viterbi(Lattice *lattice) const;
-
-  static bool forwardbackward(Lattice *lattice);
-  static bool initPartial(Lattice *lattice);
-  static bool initNBest(Lattice *lattice);
-  static bool buildBestLattice(Lattice *lattice);
-  static bool buildAllLattice(Lattice *lattice);
-  static bool buildAlternative(Lattice *lattice);
-
-  scoped_ptr<Tokenizer<Node, Path> > tokenizer_;
-  scoped_ptr<Connector> connector_;
-  int                   cost_factor_;
-  whatlog               what_;
-};
+    scoped_ptr<Tokenizer<Node, Path>> tokenizer_;
+    scoped_ptr<Connector> connector_;
+    int cost_factor_;
+    whatlog what_;
+  };
 }
-#endif  // MECAB_VITERBI_H_
+#endif // MECAB_VITERBI_H_

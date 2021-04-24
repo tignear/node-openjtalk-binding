@@ -1,5 +1,5 @@
 #include <napi.h>
-#include <open_jtalk.h>
+#include <open_jtalk.hpp>
 #include <limits>
 
 /**compatibility of c++14**/

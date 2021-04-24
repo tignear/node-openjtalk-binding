@@ -54,170 +54,168 @@
 
 #include "mecab.h"
 
-#ifdef __cplusplus
-#define MECAB_CPP_START extern "C" {
-#define MECAB_CPP_END   }
-#else
-#define MECAB_CPP_START
-#define MECAB_CPP_END
-#endif                          /* __CPLUSPLUS */
-
-MECAB_CPP_START;
-
-BOOL Mecab_initialize(Mecab *m)
+namespace MeCab
 {
-   m->feature = NULL;
-   m->size = 0;
-   m->model = NULL;
-   m->tagger = NULL;
-   m->lattice = NULL;
-   return TRUE;
-}
 
-BOOL Mecab_load(Mecab *m, const char *dicdir)
-{
-   int i;
-   int argc = 3;
-   char **argv;
-
-   if(m == NULL)
-      return FALSE;
-
-   if(dicdir == NULL || strlen(dicdir) == 0)
-      return FALSE;
-
-   Mecab_clear(m);
-
-   argv = (char **) malloc(sizeof(char *) * argc);
-
-   argv[0] = strdup("mecab");
-   argv[1] = strdup("-d");
-   argv[2] = strdup(dicdir);
-
-   MeCab::Model *model = MeCab::createModel(argc, argv);
-
-   for(i = 0; i < argc; i++)
-      free(argv[i]);
-   free(argv);
-
-   if(model == NULL) {
-      return FALSE;
-   }
-
-   MeCab::Tagger *tagger = model->createTagger();
-   if(tagger == NULL) {
-      delete model;
-      return FALSE;
-   }
-
-   MeCab::Lattice *lattice = model->createLattice();
-   if(lattice == NULL) {
-      delete model;
-      delete tagger;
-      return FALSE;
-   }
-
-   m->model = (void *) model;
-   m->tagger = (void *) tagger;
-   m->lattice = (void *) lattice;
-
-   return TRUE;
-}
-
-BOOL Mecab_analysis(Mecab *m, const char *str)
-{
-   if(m->model == NULL || m->tagger == NULL || m->lattice == NULL || str == NULL)
-      return FALSE;
-
-   if(m->size > 0 || m->feature != NULL)
-      Mecab_refresh(m);
-
-   MeCab::Tagger *tagger = (MeCab::Tagger *) m->tagger;
-   MeCab::Lattice *lattice = (MeCab::Lattice *) m->lattice;
-
-   lattice->set_sentence(str);
-
-   if(tagger->parse(lattice) == false) {
-      lattice->clear();
-      return FALSE;
-   }
-
-   for (const MeCab::Node* node = lattice->bos_node(); node; node = node->next) {
-      if(node->stat != MECAB_BOS_NODE && node->stat != MECAB_EOS_NODE)
-         m->size++;
-   }
-
-   if(m->size == 0)
-      return TRUE;
-
-   m->feature = (char **) calloc(m->size, sizeof(char *));
-   int index = 0;
-   for (const MeCab::Node* node = lattice->bos_node(); node; node = node->next) {
-      if(node->stat != MECAB_BOS_NODE && node->stat != MECAB_EOS_NODE) {
-         std::string f(node->surface, node->length);
-         f += ",";
-         f += node->feature;
-         m->feature[index] = strdup(f.c_str());
-         index++;
-      }
-   }
-
-   lattice->clear();
-
-   return TRUE;
-}
-
-
-int Mecab_get_size(Mecab *m)
-{
-   return m->size;
-}
-
-char **Mecab_get_feature(Mecab *m)
-{
-   return m->feature;
-}
-
-BOOL Mecab_refresh(Mecab *m)
-{
-   int i;
-
-   if(m->feature != NULL) {
-      for(i = 0; i < m->size; i++)
-         free(m->feature[i]);
-      free(m->feature);
+   BOOL Mecab_initialize(Mecab *m)
+   {
       m->feature = NULL;
       m->size = 0;
-   }
-
-   return TRUE;
-}
-
-BOOL Mecab_clear(Mecab *m)
-{
-   Mecab_refresh(m);
-
-   if(m->lattice) {
-      MeCab::Lattice *lattice = (MeCab::Lattice *) m->lattice;
-      delete lattice;
-      m->lattice = NULL;
-   }
-
-   if(m->tagger) {
-      MeCab::Tagger *tagger = (MeCab::Tagger *) m->tagger;
-      delete tagger;
-      m->tagger = NULL;
-   }
-
-   if(m->model) {
-      MeCab::Model *model = (MeCab::Model *) m->model;
-      delete model;
       m->model = NULL;
+      m->tagger = NULL;
+      m->lattice = NULL;
+      return TRUE;
    }
 
-   return TRUE;
+   BOOL Mecab_load(Mecab *m, const char *dicdir, const TokenizerOpenFromMemoryOptions &tokenizer_options)
+   {
+      int i;
+      int argc = 3;
+      char **argv;
+
+      if (m == NULL)
+         return FALSE;
+
+      if (dicdir == NULL || strlen(dicdir) == 0)
+         return FALSE;
+
+      Mecab_clear(m);
+
+      argv = (char **)malloc(sizeof(char *) * argc);
+
+      argv[0] = strdup("mecab");
+      argv[1] = strdup("-d");
+      argv[2] = strdup(dicdir);
+
+      MeCab::Model *model = MeCab::createModel(argc, argv, tokenizer_options);
+
+      for (i = 0; i < argc; i++)
+         free(argv[i]);
+      free(argv);
+
+      if (model == NULL)
+      {
+         return FALSE;
+      }
+
+      MeCab::Tagger *tagger = model->createTagger();
+      if (tagger == NULL)
+      {
+         delete model;
+         return FALSE;
+      }
+
+      MeCab::Lattice *lattice = model->createLattice();
+      if (lattice == NULL)
+      {
+         delete model;
+         delete tagger;
+         return FALSE;
+      }
+
+      m->model = model;
+      m->tagger = tagger;
+      m->lattice = lattice;
+
+      return TRUE;
+   }
+
+   BOOL Mecab_analysis(Mecab *m, const char *str)
+   {
+      if (m->model == NULL || m->tagger == NULL || m->lattice == NULL || str == NULL)
+         return FALSE;
+
+      if (m->size > 0 || m->feature != NULL)
+         Mecab_refresh(m);
+
+      MeCab::Tagger *tagger = (MeCab::Tagger *)m->tagger;
+      MeCab::Lattice *lattice = (MeCab::Lattice *)m->lattice;
+
+      lattice->set_sentence(str);
+
+      if (tagger->parse(lattice) == false)
+      {
+         lattice->clear();
+         return FALSE;
+      }
+
+      for (const MeCab::Node *node = lattice->bos_node(); node; node = node->next)
+      {
+         if (node->stat != MECAB_BOS_NODE && node->stat != MECAB_EOS_NODE)
+            m->size++;
+      }
+
+      if (m->size == 0)
+         return TRUE;
+
+      m->feature = (char **)calloc(m->size, sizeof(char *));
+      int index = 0;
+      for (const MeCab::Node *node = lattice->bos_node(); node; node = node->next)
+      {
+         if (node->stat != MECAB_BOS_NODE && node->stat != MECAB_EOS_NODE)
+         {
+            std::string f(node->surface, node->length);
+            f += ",";
+            f += node->feature;
+            m->feature[index] = strdup(f.c_str());
+            index++;
+         }
+      }
+
+      lattice->clear();
+
+      return TRUE;
+   }
+
+   int Mecab_get_size(Mecab *m)
+   {
+      return m->size;
+   }
+
+   char **Mecab_get_feature(Mecab *m)
+   {
+      return m->feature;
+   }
+
+   BOOL Mecab_refresh(Mecab *m)
+   {
+      int i;
+
+      if (m->feature != NULL)
+      {
+         for (i = 0; i < m->size; i++)
+            free(m->feature[i]);
+         free(m->feature);
+         m->feature = NULL;
+         m->size = 0;
+      }
+
+      return TRUE;
+   }
+
+   BOOL Mecab_clear(Mecab *m)
+   {
+      Mecab_refresh(m);
+
+      if (m->lattice)
+      {
+         delete m->lattice;
+         m->lattice = NULL;
+      }
+
+      if (m->tagger)
+      {
+         delete m->tagger;
+         m->tagger = NULL;
+      }
+
+      if (m->model)
+      {
+         delete m->model;
+         m->model = NULL;
+      }
+      return TRUE;
+   }
+
 }
-
-MECAB_CPP_END;
-
-#endif                          /* !MECAB_CPP */
+#endif /* !MECAB_CPP */

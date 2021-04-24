@@ -180,7 +180,7 @@ class wlog {
 
 #define CHECK_FALSE(condition) \
  if (condition) {} else return \
-   wlog(&what_) & what_.stream_ <<              \
+   wlog(&this->what_) & this->what_.stream_ <<              \
       __FILE__ << "(" << __LINE__ << ") [" << #condition << "] "
 
 #define CHECK_DIE(condition) \

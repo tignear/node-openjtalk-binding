@@ -54,7 +54,7 @@ class Param {
  public:
   bool open(int argc,  char **argv, const Option *opt);
   bool open(const char *arg,  const Option *opt);
-  bool load(const char *filename);
+  bool load();
   void clear();
   const std::vector<std::string>& rest_args() const { return rest_; }
 
