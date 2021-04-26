@@ -84,10 +84,10 @@ namespace MeCab
       virtual ~ModelImpl();
 
       bool open(int argc, char **argv);
-      bool open(int argc, char **argv, const TokenizerOpenFromMemoryOptions &options);
+      bool open(const ViterbiOptions &options);
       bool open(const char *arg);
       bool open(const Param &param);
-      bool open(const Param &param, const TokenizerOpenFromMemoryOptions &options);
+      bool open(const Param &param, const ViterbiOptions &options);
 
       bool swap(Model *model);
 
@@ -386,16 +386,16 @@ namespace MeCab
       }
       return open(param);
     }
-    bool ModelImpl::open(int argc, char **argv, const TokenizerOpenFromMemoryOptions &tokenizer_options)
+    bool ModelImpl::open(const ViterbiOptions &viterbi_options)
     {
       Param param;
-      if (!param.open(argc, argv, long_options) ||
+      if (!param.open(long_options) ||
           !load_dictionary_resource(&param))
       {
         setGlobalError(param.what());
         return false;
       }
-      return open(param, tokenizer_options);
+      return open(param, viterbi_options);
     }
     bool ModelImpl::open(const char *arg)
     {
@@ -429,9 +429,9 @@ namespace MeCab
       return is_available();
     }
 
-    bool ModelImpl::open(const Param &param, const TokenizerOpenFromMemoryOptions &tokenizer_options)
+    bool ModelImpl::open(const Param &param, const ViterbiOptions &viterbi_options)
     {
-      if (!writer_->open(param) || !viterbi_->open(param, tokenizer_options))
+      if (!writer_->open(param) || !viterbi_->open(param, viterbi_options))
       {
         std::string error = viterbi_->what();
         if (!error.empty())
@@ -1289,10 +1289,10 @@ namespace MeCab
   {
     return getGlobalError();
   }
-  Model *createModel(int argc, char **argv, const TokenizerOpenFromMemoryOptions &tokenizer_options)
+  Model *createModel(const ViterbiOptions &viterbi_options)
   {
     ModelImpl *model = new ModelImpl;
-    if (!model->open(argc, argv, tokenizer_options))
+    if (!model->open(viterbi_options))
     {
       delete model;
       return 0;

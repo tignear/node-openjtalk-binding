@@ -139,7 +139,7 @@ namespace MeCab
               Allocator<N, P> *allocator,
               Lattice *lattice) const;
     bool open(const Param &param);
-    bool open(const Param &param, const TokenizerOpenFromMemoryOptions &options);
+    bool open(const Param &param, const ViterbiOptions &options);
     void close();
 
     const DictionaryInfo *dictionary_info() const;

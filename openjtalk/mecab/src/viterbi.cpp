@@ -67,13 +67,13 @@ bool Viterbi::open(const Param &param) {
   return true;
 }
 
-bool Viterbi::open(const Param &param,const TokenizerOpenFromMemoryOptions& tokenizer_options) {
+bool Viterbi::open(const Param &param,const ViterbiOptions& viterbi_options) {
   tokenizer_.reset(new Tokenizer<Node, Path>);
-  CHECK_FALSE(tokenizer_->open(param,tokenizer_options)) << tokenizer_->what();
+  CHECK_FALSE(tokenizer_->open(param,viterbi_options)) << tokenizer_->what();
   CHECK_FALSE(tokenizer_->dictionary_info()) << "Dictionary is empty";
 
   connector_.reset(new Connector);
-  CHECK_FALSE(connector_->open(param)) << connector_->what();
+  CHECK_FALSE(connector_->open(viterbi_options.matrix.data,viterbi_options.matrix.size)) << connector_->what();
 
   CHECK_FALSE(tokenizer_->dictionary_info()->lsize ==
               connector_->left_size() &&

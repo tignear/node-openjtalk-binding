@@ -17,7 +17,7 @@ namespace MeCab
   {
   public:
     bool open(const Param &param);
-    bool open(const Param &param, const TokenizerOpenFromMemoryOptions &tokenizer_options);
+    bool open(const Param &param, const ViterbiOptions &viterbi_options);
 
     bool analyze(Lattice *lattice) const;
 

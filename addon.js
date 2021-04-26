@@ -9,21 +9,20 @@ const path_to_dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdi
 
 const { promises: fs } = require("fs");
 async function loadDictionary(path_to_dictionary) {
-  const [unkdic,sysdic,property] = (await Promise.all(
+  const [unkdic, sysdic, property, matrix] = (await Promise.all(
     [
       fs.readFile(path.resolve(path_to_dictionary, "unk.dic")),
       fs.readFile(path.resolve(path_to_dictionary, "sys.dic")),
-      fs.readFile(path.resolve(path_to_dictionary, "char.bin"))
+      fs.readFile(path.resolve(path_to_dictionary, "char.bin")),
+      fs.readFile(path.resolve(path_to_dictionary, "matrix.bin"))
     ]
-  )).map(e=>e.buffer);
-
+  )).map(e => e.buffer);
   return {
-    dir: path_to_dictionary,
     unkdic,
     sysdic,
-    property
+    property,
+    matrix
   };
-
 }
 const default_dictionary = loadDictionary(path_to_dictionary);
 

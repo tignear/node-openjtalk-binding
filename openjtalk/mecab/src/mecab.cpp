@@ -67,7 +67,7 @@ namespace MeCab
       return TRUE;
    }
 
-   BOOL Mecab_load(Mecab *m, const char *dicdir, const TokenizerOpenFromMemoryOptions &tokenizer_options)
+   BOOL Mecab_load(Mecab *m, const ViterbiOptions &viterbi_options)
    {
       int i;
       int argc = 3;
@@ -76,22 +76,11 @@ namespace MeCab
       if (m == NULL)
          return FALSE;
 
-      if (dicdir == NULL || strlen(dicdir) == 0)
-         return FALSE;
-
       Mecab_clear(m);
 
-      argv = (char **)malloc(sizeof(char *) * argc);
 
-      argv[0] = strdup("mecab");
-      argv[1] = strdup("-d");
-      argv[2] = strdup(dicdir);
+      MeCab::Model *model = MeCab::createModel(viterbi_options);
 
-      MeCab::Model *model = MeCab::createModel(argc, argv, tokenizer_options);
-
-      for (i = 0; i < argc; i++)
-         free(argv[i]);
-      free(argv);
 
       if (model == NULL)
       {

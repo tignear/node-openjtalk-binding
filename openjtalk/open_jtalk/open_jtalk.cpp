@@ -27,9 +27,9 @@ void Open_JTalk_clear(Open_JTalk *open_jtalk)
   HTS_Engine_clear(&open_jtalk->engine);
 }
 
-int Open_JTalk_load(Open_JTalk *open_jtalk, const char *dn_mecab, void *voice_data, size_t length_of_voice_data, const MeCab::TokenizerOpenFromMemoryOptions &tokenizer_options)
+int Open_JTalk_load(Open_JTalk *open_jtalk, void *voice_data, size_t length_of_voice_data, const MeCab::ViterbiOptions &viterbi_options)
 {
-  if (MeCab::Mecab_load(&open_jtalk->mecab, dn_mecab, tokenizer_options) != TRUE)
+  if (MeCab::Mecab_load(&open_jtalk->mecab, viterbi_options) != TRUE)
   {
     Open_JTalk_clear(open_jtalk);
     return 1;

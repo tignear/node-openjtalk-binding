@@ -47,7 +47,7 @@
 
 #ifndef MECAB_MECAB_H_
 #define MECAB_MECAB_H_
-#include "tokenizer_options.h"
+#include "viterbi_options.h"
 /* C/C++ common data structures  */
 
 /**
@@ -848,7 +848,7 @@ namespace MeCab
   };
 
   BOOL Mecab_initialize(Mecab *m);
-  BOOL Mecab_load(Mecab *m, const char *dicdir, const TokenizerOpenFromMemoryOptions &);
+  BOOL Mecab_load(Mecab *m, const ViterbiOptions &);
   BOOL Mecab_analysis(Mecab *m, const char *str);
   int Mecab_get_size(Mecab *m);
   char **Mecab_get_feature(Mecab *m);
@@ -1540,7 +1540,7 @@ namespace MeCab
  * Alias of Mode::create(argc, argv)
  */
   MECAB_DLL_EXTERN Model *createModel(int argc, char **argv);
-  MECAB_DLL_EXTERN Model *createModel(int argc, char **argv,const TokenizerOpenFromMemoryOptions& tokenizer_options);
+  MECAB_DLL_EXTERN Model *createModel(const ViterbiOptions& viterbi_options);
 
   /**
  * Alias of Mode::create(arg)

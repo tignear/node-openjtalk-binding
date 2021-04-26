@@ -102,7 +102,7 @@ namespace MeCab
   }
   
   template <typename N, typename P>
-  bool Tokenizer<N, P>::open(const Param &param,const TokenizerOpenFromMemoryOptions &options)
+  bool Tokenizer<N, P>::open(const Param &param,const ViterbiOptions &options)
   {
     unkdic_.open(options.unkdic.data, options.unkdic.size);
 

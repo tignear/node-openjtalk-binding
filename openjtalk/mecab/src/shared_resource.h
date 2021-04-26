@@ -10,17 +10,20 @@ namespace MeCab
     SharedResource() : Resource<T>(), ptr()
     {
     }
-    void open(std::shared_ptr<T> ptr, size_t length)
+    void open(std::shared_ptr<char> ptr, size_t length)
     {
       this->ptr = ptr;
-      this->text = ptr.get();
+      this->text = reinterpret_cast<T *>(ptr.get());
       this->length = length;
     }
-    virtual ~SharedResource()
+    void close()
     {
+      this->text = nullptr;
+      this->length = 0;
+      this->ptr.reset();
     }
 
   private:
-    std::shared_ptr<T> ptr;
+    std::shared_ptr<char> ptr;
   };
 }

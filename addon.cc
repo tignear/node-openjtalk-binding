@@ -88,12 +88,11 @@ void taskFunc(
     ResultTSFN tsfn,
     ReleaseTSFN<Napi::ArrayBuffer> releaseBuffer,
     Napi::Reference<Napi::ArrayBuffer> *buffer_ref,
-    const std::string &dn_dict,
     void *voice_data,
     size_t length_of_voice_data,
     const std::string &text,
     const Options &options,
-    const MeCab::TokenizerOpenFromMemoryOptions &tokenizer_options)
+    const MeCab::ViterbiOptions &viterbi_options)
 {
   Open_JTalk open_jtalk;
 
@@ -101,10 +100,9 @@ void taskFunc(
 
   int code = Open_JTalk_load(
       &open_jtalk,
-      dn_dict.c_str(),
       voice_data,
       length_of_voice_data,
-      tokenizer_options);
+      viterbi_options);
   releaseBuffer.NonBlockingCall(buffer_ref);
   releaseBuffer.Release();
   if (code)
@@ -141,12 +139,12 @@ void taskFunc(
   tsfn.Release();
   Open_JTalk_clear(&open_jtalk);
 }
-void SetEntryToOption(Napi::Env env, Napi::ArrayBuffer buf, MeCab::TokenizerOpenFromMemoryOptionsData &d)
+void SetEntryToOption(Napi::Env env, Napi::ArrayBuffer buf, MeCab::ViterbiOptionsData &d)
 {
   d.data = createReferenceSharedPtr(env, buf);
   d.size = buf.ByteLength();
 }
-void LoadDictionaryOptions(Napi::Env env, const Napi::Object &js_dictionary, MeCab::TokenizerOpenFromMemoryOptions &tokenizer_options)
+void LoadDictionaryOptions(Napi::Env env, const Napi::Object &js_dictionary, MeCab::ViterbiOptions &viterbi_options)
 {
   auto js_unkdic = js_dictionary.Get("unkdic");
   if (!js_unkdic.IsArrayBuffer())
@@ -163,17 +161,22 @@ void LoadDictionaryOptions(Napi::Env env, const Napi::Object &js_dictionary, MeC
   {
     throw Napi::TypeError::New(env, "Expected dictionary.property to be ArrayBuffer.");
   }
-  SetEntryToOption(env, js_unkdic.As<Napi::ArrayBuffer>(), tokenizer_options.unkdic);
-  SetEntryToOption(env, js_sysdic.As<Napi::ArrayBuffer>(), tokenizer_options.sysdic);
-  SetEntryToOption(env, js_property.As<Napi::ArrayBuffer>(), tokenizer_options.property);
+  auto js_matrix = js_dictionary.Get("matrix");
+  if (!js_matrix.IsArrayBuffer())
+  {
+    throw Napi::TypeError::New(env, "Expected dictionary.matrix to be ArrayBuffer.");
+  }
+  SetEntryToOption(env, js_unkdic.As<Napi::ArrayBuffer>(), viterbi_options.unkdic);
+  SetEntryToOption(env, js_sysdic.As<Napi::ArrayBuffer>(), viterbi_options.sysdic);
+  SetEntryToOption(env, js_property.As<Napi::ArrayBuffer>(), viterbi_options.property);
+  SetEntryToOption(env, js_matrix.As<Napi::ArrayBuffer>(), viterbi_options.matrix);
 }
 void LoadArguments(
     const Napi::CallbackInfo &info,
     std::string &text,
-    std::string &dn_dict,
     Napi::ArrayBuffer &voice_array_buff,
     Options &options,
-    MeCab::TokenizerOpenFromMemoryOptions &tokenizer_options)
+    MeCab::ViterbiOptions &viterbi_options)
 {
   Napi::Env env = info.Env();
   if (info.Length() < 3)
@@ -204,7 +207,6 @@ void LoadArguments(
     throw Napi::TypeError::New(env, "Expected dictionary to be object.");
   }
   auto js_dictionary = dictionary_js_value.As<Napi::Object>();
-  dn_dict = js_dictionary.Get("dir").As<Napi::String>().Utf8Value();
   if (!js_options.Has("htsvoice"))
   {
     throw Napi::TypeError::New(env, "Expected options to have htsvoice.");
@@ -217,7 +219,7 @@ void LoadArguments(
 
   text = info[1].As<Napi::String>().Utf8Value();
   voice_array_buff = htsvoice_js_value.As<Napi::ArrayBuffer>();
-  LoadDictionaryOptions(env, js_dictionary, tokenizer_options);
+  LoadDictionaryOptions(env, js_dictionary, viterbi_options);
   ExtractOptions(options, js_options);
 }
 ThreadPool pool(std::thread::hardware_concurrency() * 2);
@@ -226,12 +228,11 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
   Napi::Env env = info.Env();
 
   std::string text;
-  std::string dn_dict;
   Napi::ArrayBuffer voice_array_buff;
   Options options;
-  MeCab::TokenizerOpenFromMemoryOptions tokenizer_options;
+  MeCab::ViterbiOptions viterbi_options;
 
-  LoadArguments(info, text, dn_dict, voice_array_buff, options, tokenizer_options);
+  LoadArguments(info, text, voice_array_buff, options, viterbi_options);
   void *voice_data = voice_array_buff.Data();
   size_t length_of_voice_data = voice_array_buff.ByteLength();
   Context *context = new Context(Napi::Persistent(info.This()));
@@ -251,7 +252,7 @@ Napi::Value Synthesis(const Napi::CallbackInfo &info)
       env,
       "Release htsvoice ArrayBuffer",
       1, 1, nullptr);
-  pool.AddTask(taskFunc, tsfn, rtsfn, voice_array_buff_ref, std::move(dn_dict), voice_data, length_of_voice_data, std::move(text), std::move(options), std::move(tokenizer_options));
+  pool.AddTask(taskFunc, tsfn, rtsfn, voice_array_buff_ref, voice_data, length_of_voice_data, std::move(text), std::move(options), std::move(viterbi_options));
   return env.Undefined();
 }
 
