@@ -20,7 +20,7 @@
                 "../../htsengine/include"
             ],
             'sources': [
-                "open_jtalk.c",
+                "open_jtalk.cpp",
             ]
         }
     ]

@@ -50,8 +50,7 @@ class CRFLearner {
  public:
   static int run(Param *param) {
     const std::string dicdir = param->get<std::string>("dicdir");
-    CHECK_DIE(param->load(DCONF(DICRC)))
-        << "no such file or directory: " << DCONF(DICRC);
+    param->load();
 
     const std::vector<std::string> &files = param->rest_args();
     if (files.size() != 2) {

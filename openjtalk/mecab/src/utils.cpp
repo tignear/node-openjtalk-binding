@@ -431,9 +431,8 @@ bool load_dictionary_resource(Param *param) {
   remove_filename(&rcfile);
   replace_string(&dicdir, "$(rcpath)", rcfile);
   param->set<std::string>("dicdir", dicdir, true);
-  dicdir = create_filename(dicdir, DICRC);
 
-  if (!param->load(dicdir.c_str())) {
+  if (!param->load()) {
     return false;
   }
 

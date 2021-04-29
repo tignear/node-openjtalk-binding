@@ -5,7 +5,8 @@
 #ifndef MECAB_CHARACTER_CATEGORY_H_
 #define MECAB_CHARACTER_CATEGORY_H_
 
-#include "mmap.h"
+#include <memory>
+#include "resource.h"
 #include "scoped_ptr.h"
 #include "ucs.h"
 #include "utils.h"
@@ -27,6 +28,8 @@ class CharProperty {
  public:
   bool open(const Param &);
   bool open(const char*);
+  bool open(std::shared_ptr<char> data,size_t length);
+
   void close();
   size_t size() const;
   void set_charset(const char *charset);
@@ -78,11 +81,11 @@ class CharProperty {
 
   static bool compile(const char *, const char *, const char*);
 
-  CharProperty(): cmmap_(new Mmap<char>), map_(0), charset_(0) {}
+  CharProperty(): cmmap_(new Resource<char>), map_(0), charset_(0) {}
   virtual ~CharProperty() { this->close(); }
 
  private:
-  scoped_ptr<Mmap<char> >   cmmap_;
+  scoped_ptr<Resource<char> >   cmmap_;
   std::vector<const char *>  clist_;
   const CharInfo            *map_;
   int                        charset_;

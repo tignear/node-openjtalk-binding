@@ -7,7 +7,7 @@
 #define MECAB_CONNECTOR_H_
 
 #include "mecab.h"
-#include "mmap.h"
+#include "resource.h"
 #include "common.h"
 #include "scoped_ptr.h"
 
@@ -16,12 +16,12 @@ class Param;
 
 class Connector {
  private:
-  scoped_ptr<Mmap<short> >  cmmap_;
+  scoped_ptr<Resource<short> >  cmmap_;
   short          *matrix_;
   unsigned short  lsize_;
   unsigned short  rsize_;
   whatlog         what_;
-
+  bool load(); 
  public:
 
   bool open(const Param &param);
@@ -51,6 +51,8 @@ class Connector {
 
   bool openText(const char *filename);
   bool open(const char *filename, const char *mode = "r");
+  bool open(std::shared_ptr<char> data,size_t length);
+
 
   bool is_valid(size_t lid, size_t rid) const {
     return (lid >= 0 && lid < rsize_ && rid >= 0 && rid < lsize_);
@@ -59,7 +61,7 @@ class Connector {
   static bool compile(const char *, const char *);
 
   explicit Connector():
-      cmmap_(new Mmap<short>), matrix_(0), lsize_(0), rsize_(0) {}
+      cmmap_(new Resource<short>), matrix_(0), lsize_(0), rsize_(0) {}
 
   virtual ~Connector() { this->close(); }
 };
