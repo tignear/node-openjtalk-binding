@@ -61,6 +61,7 @@ namespace MeCab
       Allocator<Node, Path> *,
       Lattice *) const;
   template bool Tokenizer<Node, Path>::open(const Param &);
+  template bool Tokenizer<Node, Path>::open(const Param &, const ViterbiOptions &);
   template Tokenizer<LearnerNode, LearnerPath>::Tokenizer();
   template void Tokenizer<LearnerNode, LearnerPath>::close();
   template const DictionaryInfo
@@ -100,9 +101,9 @@ namespace MeCab
     eos_node->stat = MECAB_EOS_NODE;
     return eos_node;
   }
-  
+
   template <typename N, typename P>
-  bool Tokenizer<N, P>::open(const Param &param,const ViterbiOptions &options)
+  bool Tokenizer<N, P>::open(const Param &param, const ViterbiOptions &options)
   {
     unkdic_.open(options.unkdic.data, options.unkdic.size);
 
@@ -110,10 +111,8 @@ namespace MeCab
     sysdic->open(options.sysdic.data, options.sysdic.size);
     CHECK_FALSE(sysdic->type() == 0)
         << "not a system dictionary";
-    
+
     property_.set_charset(sysdic->charset());
-
-
 
     dic_.push_back(sysdic);
     CHECK_FALSE(property_.open(options.property.data, options.property.size)) << property_.what();
@@ -130,8 +129,7 @@ namespace MeCab
       dic_.push_back(d);
     }
 
-
-        dictionary_info_ = 0;
+    dictionary_info_ = 0;
     dictionary_info_freelist_.free();
     for (int i = static_cast<int>(dic_.size() - 1); i >= 0; --i)
     {
