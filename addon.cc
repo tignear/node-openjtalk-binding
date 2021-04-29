@@ -29,11 +29,11 @@ struct Wave
   signed short *value;
   size_t sampling_frequency;
 };
+
 using DataType = variant<Wave, const char *>;
 void CallJs(Napi::Env env, Napi::Function callback, Context *context,
             DataType *data)
 {
-
   if (env != nullptr)
   {
     if (callback != nullptr)
@@ -60,11 +60,13 @@ void CallJs(Napi::Env env, Napi::Function callback, Context *context,
     delete data;
   }
 }
+
 template <class T>
 void CallRelease(Napi::Env env, Napi::Function callback, std::nullptr_t *, Napi::Reference<T> *data)
 {
   delete data;
 }
+
 using ResultTSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 template <class T>
 using ReleaseTSFN = Napi::TypedThreadSafeFunction<std::nullptr_t, Napi::Reference<T>, CallRelease<T>>;
@@ -139,6 +141,7 @@ void taskFunc(
   tsfn.Release();
   Open_JTalk_clear(&open_jtalk);
 }
+
 void SetEntryToOption(Napi::Env env, Napi::ArrayBuffer buf, MeCab::ViterbiOptionsData &d)
 {
   d.data = createReferenceSharedPtr(env, buf);
@@ -171,6 +174,7 @@ void LoadDictionaryOptions(Napi::Env env, const Napi::Object &js_dictionary, MeC
   SetEntryToOption(env, js_property.As<Napi::ArrayBuffer>(), viterbi_options.property);
   SetEntryToOption(env, js_matrix.As<Napi::ArrayBuffer>(), viterbi_options.matrix);
 }
+
 void LoadArguments(
     const Napi::CallbackInfo &info,
     std::string &text,
@@ -222,7 +226,8 @@ void LoadArguments(
   LoadDictionaryOptions(env, js_dictionary, viterbi_options);
   ExtractOptions(options, js_options);
 }
-ThreadPool pool(std::thread::hardware_concurrency() * 2);
+
+ThreadPool pool(std::thread::hardware_concurrency());
 Napi::Value Synthesis(const Napi::CallbackInfo &info)
 {
   Napi::Env env = info.Env();
