@@ -1,64 +1,83 @@
+export function readDictionary(path_to_dictionary: string): Promise<Dictionary>;
 export function synthesis(text: string, options: OpenJTalkOptions): Promise<WaveObject>;
-export var dictionary_dir: string;
+export { path_to_dictionary as dictionary_dir };
+export type Dictionary = {
+    /**
+     * unk.dic
+     */
+    unkdic: Uint8Array | ArrayBuffer;
+    /**
+     * sys.dic
+     */
+    sysdic: Uint8Array | ArrayBuffer;
+    /**
+     * char.bin
+     */
+    property: Uint8Array | ArrayBuffer;
+    /**
+     * matrix.bin
+     */
+    matrix: Uint8Array | ArrayBuffer;
+};
 export type OpenJTalkOptions = {
     /**
-     * Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
+     * Path to htsvoice. Or data ArrayBuffer,Buffer.
      */
-    dictionary?: string;
+    htsvoice: string | Uint8Array | ArrayBuffer;
     /**
-     * Path to htsvoice. Path to htsvoice. Or data ArrayBuffer,Buffer.
+     * Dictionary object or Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
      */
-    htsvoice: string | ArrayBuffer | Uint8Array;
+    dictionary?: string | Dictionary;
     /**
      * Must be int. 1<=sampling_frequency.
      */
-    sampling_frequency?: number | null;
+    sampling_frequency?: number;
     /**
      * Must be int. 1<=frame_period.
      */
-    frame_period?: number | null;
+    frame_period?: number;
     /**
      * 0.0<=all_pass_constant<=1.0.
      */
-    all_pass_constant?: number | null;
+    all_pass_constant?: number;
     /**
      * Default is 0.0. 0.0<=postfiltering_coefficient<=1.0.
      */
-    postfiltering_coefficient?: number | null;
+    postfiltering_coefficient?: number;
     /**
      * Default is 1.0. 0<=speech_speed_rate. Warning: Do not set a very small value as it consumes CPU time.
      */
-    speech_speed_rate?: number | null;
+    speech_speed_rate?: number;
     /**
      * Default is 0.0.
      */
-    additional_half_tone?: number | null;
+    additional_half_tone?: number;
     /**
      * Default is 0.5. 0.0<=voiced_unvoiced_threshold<=1.0.
      */
-    voiced_unvoiced_threshold?: number | null;
+    voiced_unvoiced_threshold?: number;
     /**
      * Default is 1.0. 0.0<=weight_of_GV_for_spectrum.
      */
-    weight_of_GV_for_spectrum?: number | null;
+    weight_of_GV_for_spectrum?: number;
     /**
      * Default is 1.0. 0.0<=weight_of_GV_for_log_F0.
      */
-    weight_of_GV_for_log_F0?: number | null;
+    weight_of_GV_for_log_F0?: number;
     /**
      * Default is 0.0.
      */
-    volume_in_dB?: number | null;
+    volume_in_dB?: number;
     /**
      * Disabled as default. 0 regarded disabled. 0<=audio_buffer_size
      */
-    audio_buffer_size?: number | null;
+    audio_buffer_size?: number;
 };
 export type WaveObject = {
     /**
      * Synthesized PCM by host byte order.
      */
-    raw_data: any;
+    raw_data: Buffer;
     /**
      * Synthesized PCM.
      */
@@ -76,3 +95,4 @@ export type WaveObject = {
      */
     numChannels: 1;
 };
+declare const path_to_dictionary: string;
