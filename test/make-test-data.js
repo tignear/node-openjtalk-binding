@@ -1,10 +1,9 @@
-const { synthesis, dictionary_dir } = require("../addon");
+const { synthesis } = require("../addon");
 const path = require("path");
 const { promises: fs } = require("fs");
 fs.readFile(path.resolve(__dirname, "./test.txt"), "utf-8").then(text =>
   synthesis(text, {
     htsvoice: path.resolve(__dirname, "../", "hts_voice_nitech_jp_atr503_m001-1.05", "nitech_jp_atr503_m001.htsvoice"),
-    dictionary: dictionary_dir,
   })).then(wave =>{
     const wav = Buffer.alloc(wave.data.byteLength + 44);
     createWAV(new DataView(wav.buffer), wave);
