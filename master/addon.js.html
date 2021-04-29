@@ -58,13 +58,13 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li class="accordion collapsed" id=7271848><div class="accordion-title"><a href="module-node-openjtalk-binding.html">node-openjtalk-binding</a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li class="accordion collapsed" id=8790965><div class="accordion-title"><a href="module-node-openjtalk-binding.html">node-openjtalk-binding</a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
     <path 
         fill-rule="evenodd" 
         clip-rule="evenodd" 
         d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z">
     </path>
-</svg></div><ul class='methods accordion-content'><li data-type='method'><a href="module-node-openjtalk-binding.html#.synthesis">synthesis</a></li></ul></li></ul></div>
+</svg></div><ul class='methods accordion-content'><li data-type='method'><a href="module-node-openjtalk-binding.html#.readDictionary">readDictionary</a></li><li data-type='method'><a href="module-node-openjtalk-binding.html#.synthesis">synthesis</a></li></ul></li></ul></div>
 </nav>
 
 <div id="main">
@@ -86,23 +86,32 @@
 
 const { synthesis: _synthesis } = require("bindings")("addon");
 const path = require("path");
-const dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
 const { promises: fs } = require("fs");
+const path_to_dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+
+/**
+ * @typedef {Object} Dictionary
+ * @property {Uint8Array|ArrayBuffer} unkdic unk.dic
+ * @property {Uint8Array|ArrayBuffer} sysdic sys.dic
+ * @property {Uint8Array|ArrayBuffer} property char.bin
+ * @property {Uint8Array|ArrayBuffer} matrix matrix.bin
+ */
+
 /**
  * @typedef {Object} OpenJTalkOptions
  * @property {!string|Uint8Array|ArrayBuffer} htsvoice Path to htsvoice. Or data ArrayBuffer,Buffer.
- * @property {?string} dictionary Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
- * @property {?number} sampling_frequency Must be int. 1&lt;=sampling_frequency.
- * @property {?number} frame_period Must be int. 1&lt;=frame_period.
- * @property {?number} all_pass_constant 0.0&lt;=all_pass_constant&lt;=1.0.
- * @property {?number} postfiltering_coefficient Default is 0.0. 0.0&lt;=postfiltering_coefficient&lt;=1.0.
- * @property {?number} speech_speed_rate Default is 1.0. 0&lt;=speech_speed_rate. Warning: Do not set a very small value as it consumes CPU time.
- * @property {?number} additional_half_tone Default is 0.0.
- * @property {?number} voiced_unvoiced_threshold Default is 0.5. 0.0&lt;=voiced_unvoiced_threshold&lt;=1.0.
- * @property {?number} weight_of_GV_for_spectrum Default is 1.0. 0.0&lt;=weight_of_GV_for_spectrum.
- * @property {?number} weight_of_GV_for_log_F0 Default is 1.0. 0.0&lt;=weight_of_GV_for_log_F0.
- * @property {?number} volume_in_dB Default is 0.0.
- * @property {?number} audio_buffer_size Disabled as default. 0 regarded disabled. 0&lt;=audio_buffer_size
+ * @property {string|Dictionary} [dictionary] Dictionary object or Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
+ * @property {number} [sampling_frequency] Must be int. 1&lt;=sampling_frequency.
+ * @property {number} [frame_period] Must be int. 1&lt;=frame_period.
+ * @property {number} [all_pass_constant] 0.0&lt;=all_pass_constant&lt;=1.0.
+ * @property {number} [postfiltering_coefficient] Default is 0.0. 0.0&lt;=postfiltering_coefficient&lt;=1.0.
+ * @property {number} [speech_speed_rate] Default is 1.0. 0&lt;=speech_speed_rate. Warning: Do not set a very small value as it consumes CPU time.
+ * @property {number} [additional_half_tone] Default is 0.0.
+ * @property {number} [voiced_unvoiced_threshold] Default is 0.5. 0.0&lt;=voiced_unvoiced_threshold&lt;=1.0.
+ * @property {number} [weight_of_GV_for_spectrum] Default is 1.0. 0.0&lt;=weight_of_GV_for_spectrum.
+ * @property {number} [weight_of_GV_for_log_F0] Default is 1.0. 0.0&lt;=weight_of_GV_for_log_F0.
+ * @property {number} [volume_in_dB] Default is 0.0.
+ * @property {number} [audio_buffer_size] Disabled as default. 0 regarded disabled. 0&lt;=audio_buffer_size
  */
 
 /**
@@ -115,8 +124,37 @@ const { promises: fs } = require("fs");
  */
 
 /**
+ * Read mecab dictionary.
+ * @async
+ * @function
+ * @static
+ * @param {String} path_to_dictionary 
+ * @returns {Promise&lt;Dictionary>}
+ */
+const readDictionary = exports.readDictionary = async function readDictionary(path_to_dictionary) {
+  const [unkdic, sysdic, property, matrix] = (await Promise.all(
+    [
+      fs.readFile(path.resolve(path_to_dictionary, "unk.dic")),
+      fs.readFile(path.resolve(path_to_dictionary, "sys.dic")),
+      fs.readFile(path.resolve(path_to_dictionary, "char.bin")),
+      fs.readFile(path.resolve(path_to_dictionary, "matrix.bin"))
+    ]
+  )).map(e => e.buffer);
+  return {
+    unkdic,
+    sysdic,
+    property,
+    matrix
+  };
+}
+
+const default_dictionary = readDictionary(path_to_dictionary);
+
+/** 
  * Synthesis voice with OpenJTalk
  * @async
+ * @function
+ * @static
  * @param {string} text Text to synthesize.
  * @param {OpenJTalkOptions} options OpenJTalk synthesize option.
  * @return {Promise&lt;WaveObject>} Synthesized PCM.
@@ -128,6 +166,14 @@ exports.synthesis = async function synthesis(text, options) {
   }
   if (htsvoice instanceof Uint8Array) {
     htsvoice = htsvoice.buffer;
+  }
+  let dictionary = options.dictionary;
+  if (!dictionary) {
+    dictionary = await default_dictionary;
+  } else if (typeof dictionary == "string") {
+    dictionary = await readDictionary(dictionary);
+  } else {
+    dictionary = Object.fromEntries(Object.entries(dictionary).map(([k, v]) => [k, v instanceof Uint8Array ? v.buffer : v]));
   }
   return new Promise((resolve, reject) => {
     function cb(err, /** @type {Buffer} */ buffer, /** @type {number} */ sampleRate) {
@@ -155,11 +201,12 @@ exports.synthesis = async function synthesis(text, options) {
   });
 }
 
+
 /** 
  * Path to builded dictionary.
  * @type {string} 
  * */
-exports.dictionary_dir = dictionary;</code></pre>
+exports.dictionary_dir = path_to_dictionary;</code></pre>
         </article>
     </section>
 
@@ -182,7 +229,7 @@ exports.dictionary_dir = dictionary;</code></pre>
 <script src="scripts/linenumber.js"></script>
 <script src="scripts/fix-code-block.js"></script>
 <script>
-  var list = [{"title":"node-openjtalk-binding","link":"<a href=\"module-node-openjtalk-binding.html\">node-openjtalk-binding</a>"},{"title":"module:node-openjtalk-binding.synthesis","link":"<a href=\"module-node-openjtalk-binding.html#.synthesis\">module:node-openjtalk-binding.synthesis &rtrif; undefined</a>"}];
+  var list = [{"title":"node-openjtalk-binding","link":"<a href=\"module-node-openjtalk-binding.html\">node-openjtalk-binding</a>"},{"title":"module:node-openjtalk-binding.readDictionary","link":"<a href=\"module-node-openjtalk-binding.html#.readDictionary\">module:node-openjtalk-binding.readDictionary &rtrif; undefined</a>"},{"title":"module:node-openjtalk-binding.synthesis","link":"<a href=\"module-node-openjtalk-binding.html#.synthesis\">module:node-openjtalk-binding.synthesis &rtrif; undefined</a>"}];
   var options = 
   setupSearch(list, options)
 </script>

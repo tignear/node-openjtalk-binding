@@ -58,13 +58,13 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li class="accordion collapsed" id=7271848><div class="accordion-title"><a href="module-node-openjtalk-binding.html">node-openjtalk-binding</a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Modules</h3><ul><li class="accordion collapsed" id=8790965><div class="accordion-title"><a href="module-node-openjtalk-binding.html">node-openjtalk-binding</a><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
     <path 
         fill-rule="evenodd" 
         clip-rule="evenodd" 
         d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z">
     </path>
-</svg></div><ul class='methods accordion-content'><li data-type='method'><a href="module-node-openjtalk-binding.html#.synthesis">synthesis</a></li></ul></li></ul></div>
+</svg></div><ul class='methods accordion-content'><li data-type='method'><a href="module-node-openjtalk-binding.html#.readDictionary">readDictionary</a></li><li data-type='method'><a href="module-node-openjtalk-binding.html#.synthesis">synthesis</a></li></ul></li></ul></div>
 </nav>
 
 <div id="main">
@@ -249,7 +249,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line81">line 81</a>
+                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line128">line 128</a>
             </li></ul></dd>
         </div>
     
@@ -271,6 +271,164 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".readDictionary">
+        <a href="#.readDictionary">#</a>
+        <span class="type-signature">(async, static) </span>readDictionary<span class="signature">(path_to_dictionary)</span><span class="type-signature"> &rarr; {Promise.&lt;Dictionary>}</span>
+    </h4>
+
+    
+
+
+
+    <div class="description">
+        Read mecab dictionary.
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>path_to_dictionary</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line53">line 53</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="method-member-container mt-20">
+    <strong>Returns:</strong>
+        
+            
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Dictionary></span>
+
+
+    </dd>
+</dl>
+
+    </div>
+
+
+
 
         
             
@@ -406,7 +564,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line43">line 43</a>
+                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line81">line 81</a>
             </li></ul></dd>
         </div>
     
@@ -464,6 +622,214 @@
         <h3 class="subsection-title">Type Definitions</h3>
 
         
+                
+<h4 class="name" id="~Dictionary">
+    <a href="#~Dictionary">#</a>
+    Dictionary
+</h4>
+
+
+
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>unkdic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+|
+
+<span class="param-type">ArrayBuffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">unk.dic</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sysdic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+|
+
+<span class="param-type">ArrayBuffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">sys.dic</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>property</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+|
+
+<span class="param-type">ArrayBuffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">char.bin</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+|
+
+<span class="param-type">ArrayBuffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix.bin</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line11">line 11</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
                 
 <h4 class="name" id="~OpenJTalkOptions">
     <a href="#~OpenJTalkOptions">#</a>
@@ -561,6 +927,9 @@
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type">Dictionary</span>
 
 
             
@@ -569,16 +938,16 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
 
             
 
-            <td class="description last">Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.</td>
+            <td class="description last">Dictionary object or Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.</td>
         </tr>
 
     
@@ -600,9 +969,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -631,9 +1000,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -662,9 +1031,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -693,9 +1062,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -724,9 +1093,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -755,9 +1124,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -786,9 +1155,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -817,9 +1186,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -848,9 +1217,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -879,9 +1248,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -910,9 +1279,9 @@
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -959,7 +1328,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line10">line 10</a>
+                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line19">line 19</a>
             </li></ul></dd>
         </div>
     
@@ -1178,7 +1547,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line27">line 27</a>
+                <a href="addon.js.html">addon.js</a>, <a href="addon.js.html#line36">line 36</a>
             </li></ul></dd>
         </div>
     
@@ -1222,7 +1591,7 @@
 <script src="scripts/linenumber.js"></script>
 <script src="scripts/fix-code-block.js"></script>
 <script>
-  var list = [{"title":"node-openjtalk-binding","link":"<a href=\"module-node-openjtalk-binding.html\">node-openjtalk-binding</a>"},{"title":"module:node-openjtalk-binding.synthesis","link":"<a href=\"module-node-openjtalk-binding.html#.synthesis\">module:node-openjtalk-binding.synthesis &rtrif; undefined</a>"}];
+  var list = [{"title":"node-openjtalk-binding","link":"<a href=\"module-node-openjtalk-binding.html\">node-openjtalk-binding</a>"},{"title":"module:node-openjtalk-binding.readDictionary","link":"<a href=\"module-node-openjtalk-binding.html#.readDictionary\">module:node-openjtalk-binding.readDictionary &rtrif; undefined</a>"},{"title":"module:node-openjtalk-binding.synthesis","link":"<a href=\"module-node-openjtalk-binding.html#.synthesis\">module:node-openjtalk-binding.synthesis &rtrif; undefined</a>"}];
   var options = 
   setupSearch(list, options)
 </script>
