@@ -23,7 +23,7 @@ jobs:
         run: yarn install --build-from-source
 
       - name: Package prebuild
-        run: yarn run build
+        run: yarn run node-pre-gyp install --build-from-source build package
 
       - name: Upload prebuild asset
         uses: icrawl/action-artifact@v2
@@ -52,7 +52,7 @@ jobs:
         run: yarn install --unsafe-perm --build-from-source
 
       - name: Package prebuild
-        run: yarn run build
+        run: yarn run node-pre-gyp install --build-from-source build package
 
       - name: Upload prebuild asset
         uses: icrawl/action-artifact@v2
