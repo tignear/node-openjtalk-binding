@@ -2,6 +2,9 @@ name: Prebuild
 on:
   release:
     types: [published]
+env:
+  npm_config_build_from_source: true
+
 jobs:
   build:
     name: Prebuild
@@ -23,7 +26,7 @@ jobs:
         run: yarn install --build-from-source
 
       - name: Package prebuild
-        run: yarn run node-pre-gyp install --build-from-source build package
+        run: yarn run build
 
       - name: Upload prebuild asset
         uses: icrawl/action-artifact@v2
@@ -52,7 +55,7 @@ jobs:
         run: yarn install --unsafe-perm --build-from-source
 
       - name: Package prebuild
-        run: yarn run node-pre-gyp install --build-from-source build package
+        run: yarn build
 
       - name: Upload prebuild asset
         uses: icrawl/action-artifact@v2
