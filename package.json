@@ -1,6 +1,6 @@
 {
   "name": "node-openjtalk-binding",
-  "version": "1.1.0-dev.0",
+  "version": "1.1.0-dev.1",
   "main": "addon.js",
   "types": "addon.d.ts",
   "license": "(MIT OR Unlicense)",
@@ -21,7 +21,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "build": "node-pre-gyp install build package"
   },
-  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.1.0-dev.0",
+  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.1.0-dev.1",
   "gypfile": true,
   "devDependencies": {
     "@types/node": "^14.14.41",
@@ -37,7 +37,7 @@
     "package_name": "{module_name}-v{version}-{node_abi}-napi-v{napi_build_version}-{platform}-{arch}-{libc}-{libc_version}.tar.gz",
     "host": "https://github.com/tignear/node-openjtalk-binding/releases/download/",
     "napi_versions": [
-      4
+      5
     ]
   }
 }
