@@ -95,6 +95,35 @@
                     'LinkTimeCodeGeneration': 'true',  # /LTCG
                 }
             },
+        },
+        {  # https://github.com/mapbox/node-pre-gyp#2-add-a-new-target-to-bindinggyp
+            "target_name": "action_after_build_node",
+            "type": "none",
+            "dependencies": ["addon"],
+            "copies": [
+                {
+                    "files": [
+                        "<(PRODUCT_DIR)/addon.node",
+                    ],
+                    "destination": "<(module_path)"
+                }
+            ]
+        },
+        {
+            "target_name": "action_after_build_dic",
+            "type": "none",
+            "dependencies": ["openjtalk"],
+            "copies": [
+                {
+                    "files": [
+                        "openjtalk/mecab-naist-jdic/char.bin",
+                        "openjtalk/mecab-naist-jdic/matrix.bin",
+                        "openjtalk/mecab-naist-jdic/sys.dic",
+                        "openjtalk/mecab-naist-jdic/unk.dic", ],
+                    "destination": "<(module_path)/dictionary"
+                }
+            ]
+
         }
     ]
 }
