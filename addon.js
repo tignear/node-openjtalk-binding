@@ -2,11 +2,12 @@
  * Simple binding of OpenJTalk.
  * @module node-openjtalk-binding
  */
-
-const { synthesis: _synthesis } = require("bindings")("addon");
-const path = require("path");
+const binary = require("@tignear/node-pre-gyp");
+const path = require('path');
+const meta = binary.meta(path.resolve(path.join(__dirname, './package.json')));
+const { synthesis: _synthesis } = require(meta.module);
 const { promises: fs } = require("fs");
-const path_to_dictionary = path.resolve(__dirname, "openjtalk", "mecab-naist-jdic");
+const path_to_dictionary = path.resolve(path.join(meta.module_path, 'dictionary'));
 
 /**
  * @typedef {Object} Dictionary

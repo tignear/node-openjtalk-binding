@@ -15,3 +15,5 @@ stamp-h1
 config.status
 /.vscode
 /docs
+/build-tmp-napi-v4
+/prebuild
