@@ -1,16 +1,10 @@
-name: Build
+name: Prebuild
 on:
-  push:
-    branches:
-      - "**"
-    tags-ignore:
-      - "*.*"
-  pull_request:
-    branches:
-      - "**"
+  release:
+    types: [published]
 jobs:
   build:
-    name: Build
+    name: Prebuild
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,11 +25,15 @@ jobs:
       - name: Package prebuild
         run: yarn run build
 
-      - name: test
-        run: yarn run test
+      - name: Upload prebuild asset
+        uses: icrawl/action-artifact@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: "build/stage/**/*.tar.gz"
 
   build_musl:
-    name: Build (musl)
+    name: Prebuild (musl)
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -56,5 +54,9 @@ jobs:
       - name: Package prebuild
         run: yarn run build
 
-      - name: test
-        run: yarn run test
+      - name: Upload prebuild asset
+        uses: icrawl/action-artifact@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: "build/stage/**/*.tar.gz"
