@@ -15,9 +15,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@tignear/node-pre-gyp@tignear/node-pre-gyp#discordjs":
-  version "0.4.0"
-  resolved "https://codeload.github.com/tignear/node-pre-gyp/tar.gz/8b2e0f6a0464b76ed3ac3c46ff6d67325b1ec357"
+"@tignear/node-pre-gyp@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@tignear/node-pre-gyp/-/node-pre-gyp-1.0.1.tgz#70179dbefbf95fb14b3561788d30fc552f157593"
+  integrity sha512-7BZARqN5FLS5Y6+fHTj1s0/RGpcTWJgXcDr+FtyKHnCGxjTUKoT7kA8mESW0r/qI4f8N2srKVi5pwga4xlNj7Q==
   dependencies:
     detect-libc "^1.0.3"
     https-proxy-agent "^5.0.0"

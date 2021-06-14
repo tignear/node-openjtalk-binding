@@ -1,6 +1,6 @@
 {
   "name": "node-openjtalk-binding",
-  "version": "1.1.0-dev.1",
+  "version": "1.1.0-rc.0",
   "main": "addon.js",
   "types": "addon.d.ts",
   "license": "(MIT OR Unlicense)",
@@ -10,7 +10,7 @@
     "url": "git+https://github.com/tignear/node-openjtalk-binding.git"
   },
   "dependencies": {
-    "@tignear/node-pre-gyp": "tignear/node-pre-gyp#discordjs",
+    "@tignear/node-pre-gyp": "^1.0.1",
     "node-addon-api": "^3.1.0"
   },
   "author": "tignear <tignear+m@gmail.com>",
@@ -21,7 +21,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "build": "node-pre-gyp install build package"
   },
-  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.1.0-dev.1",
+  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.1.0-rc.0",
   "gypfile": true,
   "devDependencies": {
     "@types/node": "^14.14.41",
