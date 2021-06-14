@@ -114,7 +114,7 @@ exports.synthesis = async function synthesis(text, options) {
       resolve(wave);
     }
     try {
-      _synthesis(cb, text, { dictionary, ...options, htsvoice });
+      _synthesis(cb, text, { ...options, htsvoice, dictionary });
     } catch (err) {
       reject(err);
     }
