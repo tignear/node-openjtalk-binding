@@ -15,7 +15,7 @@ stamp-h1
 config.status
 /.vscode
 /docs
-/build-tmp-napi-v4
+/build-tmp-napi-v*
 /prebuild
 /hts_voice_nitech_jp_atr503_m001-1.05
 /example
