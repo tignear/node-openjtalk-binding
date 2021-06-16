@@ -22,3 +22,7 @@ config.status
 /test
 /tools
 /.github
+/yarn.lock
+/readme.md
+/tsconfig.json
+/jsdoc.json
