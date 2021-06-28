@@ -95,8 +95,8 @@ exports.synthesis = async function synthesis(text, options) {
   } else {
     dictionary = Object.fromEntries(Object.entries(dictionary).map(([k, v]) => [k, v instanceof Uint8Array ? v.buffer : v]));
   }
-  if (!text) throw new TypeError("The first argument must be a non-empty string");
   return new Promise((resolve, reject) => {
+    if (!text) reject(new TypeError("The first argument must be a non-empty string"));
     function cb(err, /** @type {Buffer} */ buffer, /** @type {number} */ sampleRate) {
       if (err) {
         reject(err);
