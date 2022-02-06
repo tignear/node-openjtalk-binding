@@ -81,7 +81,7 @@ constexpr option_return option(
       {
         throw Napi::TypeError::New(env, key + " is out of range."s);
       }
-      options.*m = d;
+      options.*m = v.As<Napi::Number>().DoubleValue();
     }
     else
     {
@@ -108,7 +108,7 @@ const static constexpr auto double_option_list = {
 #endif
 
 template <size_t idx, class Dst, class Src>
-inline void OptionsLoop(Dst dst, Src src)
+inline void OptionsLoop(Dst &dst, Src src)
 {
 #if __cplusplus < 201703L
   auto int_option_list = make_array(
