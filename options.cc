@@ -81,7 +81,7 @@ constexpr option_return option(
       {
         throw Napi::TypeError::New(env, key + " is out of range."s);
       }
-      options.*m = v.As<Napi::Number>().DoubleValue();
+      options.*m = d;
     }
     else
     {
