@@ -1,10 +1,10 @@
 {
   "name": "node-openjtalk-binding",
-  "version": "1.2.0",
+  "version": "1.99.0",
   "main": "addon.js",
   "types": "addon.d.ts",
   "license": "(MIT OR Unlicense)",
-  "description": "Simple binding of OpenJTalk",
+  "description": "Simple binding of OpenJTalk -- forked and changed for VUTD",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tignear/node-openjtalk-binding.git"
