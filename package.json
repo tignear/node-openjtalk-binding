@@ -1,6 +1,6 @@
 {
   "name": "node-openjtalk-binding",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "addon.js",
   "types": "addon.d.ts",
   "license": "(MIT OR Unlicense)",
@@ -21,7 +21,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "build": "node-pre-gyp install build package"
   },
-  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.2.0",
+  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.2.1",
   "gypfile": true,
   "devDependencies": {
     "@types/node": "^14.14.41",
