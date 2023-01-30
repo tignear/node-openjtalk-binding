@@ -9,8 +9,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15, ubuntu-20.04, ubuntu-18.04, windows-2019]
-        node: [12, 14, 16, 17]
+        os: [macos-10.15, ubuntu-22.04, ubuntu-20.04, ubuntu-18.04, windows-2019]
+        node: [16, 18]
+        exclude:
+          - os: ubuntu-18.04
+            node: [18]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,6 +31,9 @@ jobs:
       - name: Package prebuild
         run: yarn run build
 
+      - name: prebuild package
+        run: yarn add -D node-gyp
+        
       - name: Upload prebuild asset
         uses: icrawl/action-artifact@v2
         env:
@@ -42,7 +48,7 @@ jobs:
       image: node:${{ matrix.node }}-alpine
     strategy:
       matrix:
-        node: [12, 14, 16, 17]
+        node: [16, 18]
     steps:
       - name: Setup env with Node v${{ matrix.node }}
         run: |
@@ -58,6 +64,9 @@ jobs:
   
       - name: Package prebuild
         run: yarn build
+
+      - name: prebuild package
+        run: yarn add -D node-gyp
 
       - name: Upload prebuild asset
         uses: icrawl/action-artifact@v2
