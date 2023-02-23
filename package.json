@@ -1,6 +1,6 @@
 {
   "name": "node-openjtalk-binding",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "main": "addon.js",
   "types": "addon.d.ts",
   "license": "(MIT OR Unlicense)",
@@ -10,8 +10,8 @@
     "url": "git+https://github.com/tignear/node-openjtalk-binding.git"
   },
   "dependencies": {
-    "@tignear/node-pre-gyp": "^1.0.1",
-    "node-addon-api": "^3.1.0"
+    "@tignear/node-pre-gyp": "^1.1.1",
+    "node-addon-api": "^6.0.0"
   },
   "author": "tignear <tignear+m@gmail.com>",
   "scripts": {
@@ -24,11 +24,11 @@
   "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.2.1",
   "gypfile": true,
   "devDependencies": {
-    "@types/node": "^14.14.41",
-    "clean-jsdoc-theme": "^3.0.9",
-    "jsdoc": "^3.6.6",
-    "node-gyp": "^8.1.0",
-    "typescript": "^4.2.3"
+    "@types/node": "^18.14.0",
+    "clean-jsdoc-theme": "^4.2.6",
+    "jsdoc": "^4.0.2",
+    "node-gyp": "^9.3.1",
+    "typescript": "^4.9.5"
   },
   "binary": {
     "module_name": "addon",
