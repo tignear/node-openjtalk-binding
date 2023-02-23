@@ -21,7 +21,7 @@
     "install": "node-pre-gyp install --fallback-to-build",
     "build": "node-pre-gyp install build package"
   },
-  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.2.1",
+  "homepage": "https://tignear.github.io/node-openjtalk-binding/v1.3.0",
   "gypfile": true,
   "devDependencies": {
     "@types/node": "^18.14.0",
