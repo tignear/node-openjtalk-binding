@@ -21,17 +21,17 @@ const path_to_dictionary = path.resolve(path.join(meta.module_path, 'dictionary'
  * @typedef {Object} OpenJTalkOptions
  * @property {!string|Uint8Array|ArrayBuffer} htsvoice Path to htsvoice. Or data ArrayBuffer,Buffer.
  * @property {string|Dictionary} [dictionary] Dictionary object or Path to dictionary. NOT be URL nor Buffer. Must be encoded by UTF-8. The default is to use dictionary_dir.
- * @property {number} [sampling_frequency] Must be int. 1<=sampling_frequency.
- * @property {number} [frame_period] Must be int. 1<=frame_period.
- * @property {number} [all_pass_constant] 0.0<=all_pass_constant<=1.0.
- * @property {number} [postfiltering_coefficient] Default is 0.0. 0.0<=postfiltering_coefficient<=1.0.
- * @property {number} [speech_speed_rate] Default is 1.0. 0<=speech_speed_rate. Warning: Do not set a very small value as it consumes CPU time.
+ * @property {number} [sampling_frequency] Must be int. 1&lt;=sampling_frequency.
+ * @property {number} [frame_period] Must be int. 1&lt;=frame_period.
+ * @property {number} [all_pass_constant] 0.0&lt;=all_pass_constant&lt;=1.0.
+ * @property {number} [postfiltering_coefficient] Default is 0.0. 0.0&lt;=postfiltering_coefficient&lt;=1.0.
+ * @property {number} [speech_speed_rate] Default is 1.0. 0&lt;=speech_speed_rate. Warning: Do not set a very small value as it consumes CPU time.
  * @property {number} [additional_half_tone] Default is 0.0.
- * @property {number} [voiced_unvoiced_threshold] Default is 0.5. 0.0<=voiced_unvoiced_threshold<=1.0.
- * @property {number} [weight_of_GV_for_spectrum] Default is 1.0. 0.0<=weight_of_GV_for_spectrum.
- * @property {number} [weight_of_GV_for_log_F0] Default is 1.0. 0.0<=weight_of_GV_for_log_F0.
+ * @property {number} [voiced_unvoiced_threshold] Default is 0.5. 0.0&lt;=voiced_unvoiced_threshold&lt;=1.0.
+ * @property {number} [weight_of_GV_for_spectrum] Default is 1.0. 0.0&lt;=weight_of_GV_for_spectrum.
+ * @property {number} [weight_of_GV_for_log_F0] Default is 1.0. 0.0&lt;=weight_of_GV_for_log_F0.
  * @property {number} [volume_in_dB] Default is 0.0.
- * @property {number} [audio_buffer_size] Disabled as default. 0 regarded disabled. 0<=audio_buffer_size
+ * @property {number} [audio_buffer_size] Disabled as default. 0 regarded disabled. 0&lt;=audio_buffer_size
  */
 
 /**
